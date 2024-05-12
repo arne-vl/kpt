@@ -5,8 +5,7 @@ import {
     Expression, 
     BinaryExpression, 
     NumericLiteral, 
-    Identifier, 
-    NullLiteral
+    Identifier
 } from "./ast.ts";
 import { tokenize, Token, TokenType } from "./lexer.ts";
 
@@ -103,9 +102,7 @@ export default class Parser {
         switch (tokentype) {
             case TokenType.Identifier:
                 return { kind: "Identifier", symbol: this.eat().value } as Identifier
-            case TokenType.Null:
-                this.eat()
-                return { kind: "NullLiteral", value: "null"} as NullLiteral
+                
             case TokenType.Number:
                 return { kind: "NumericLiteral", value: parseFloat(this.eat().value) } as NumericLiteral
             

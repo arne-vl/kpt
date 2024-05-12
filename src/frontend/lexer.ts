@@ -1,5 +1,4 @@
 export enum TokenType {
-    Null, // null
     Number, // 123
     Identifier, // variable name
 
@@ -22,7 +21,6 @@ export enum TokenType {
 
 const KEYWORDS: Record<string, TokenType> = {
     "dieje": TokenType.Let,
-    "nikske": TokenType.Null,
 }
 
 export interface Token {
