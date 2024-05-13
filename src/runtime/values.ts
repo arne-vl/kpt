@@ -1,5 +1,5 @@
 export type ValueType = 
-    "null"
+    | "null"
     | "number"
     | "boolean"
 

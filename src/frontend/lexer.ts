@@ -1,9 +1,10 @@
 export enum TokenType {
-    Number, // 123
-    Identifier, // variable name
+    Number,
+    Identifier,
 
     BinaryOperator, // + - * / %
     Equals, // =
+    Semicolon, // ;
 
     OpenParen, // (
     CloseParen, // )
@@ -14,13 +15,16 @@ export enum TokenType {
     OpenBrace, // {
     CloseBrace, // }
 
-    Let, // let
+    Let, 
+    Const,
 
     EOF // End Of File
 }
 
 const KEYWORDS: Record<string, TokenType> = {
-    "dieje": TokenType.Let,
+    "efkes": TokenType.Let,
+    "altij": TokenType.Const,
+
 }
 
 export interface Token {
@@ -67,6 +71,8 @@ export function tokenize(sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.OpenBrace))
         } else if (src[0] == "="){
             tokens.push(token(src.shift(), TokenType.Equals))
+        } else if (src[0] == ";"){
+            tokens.push(token(src.shift(), TokenType.Semicolon))
         } else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%"){
             tokens.push(token(src.shift(), TokenType.BinaryOperator))
         } else {

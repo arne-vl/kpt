@@ -5,14 +5,15 @@ import {
     Expression, 
     BinaryExpression, 
     NumericLiteral, 
-    Identifier
+    Identifier,
+    VariableDeclaration
 } from "./ast.ts";
 import { tokenize, Token, TokenType } from "./lexer.ts";
 
 export default class Parser {
     private tokens: Token[] = []
 
-    private notEOF(): boolean {
+    private not_eof(): boolean {
         return this.tokens[0].type != TokenType.EOF
     }
 
@@ -36,7 +37,7 @@ export default class Parser {
         return prev
     }
 
-    public produceAST(sourceCode: string): Program {
+    public produce_ast(sourceCode: string): Program {
         this.tokens = tokenize(sourceCode)
 
         const program: Program = {
@@ -44,28 +45,64 @@ export default class Parser {
             body: []
         }
 
-        while (this.notEOF()) {
-            program.body.push(this.parseStatement())
+        while (this.not_eof()) {
+            program.body.push(this.parse_statement())
         }
 
         return program
     }
 
-    private parseStatement(): Statement {
-        // skip to parseExpression
-        return this.parseExpression()
+    private parse_variable_declaration(): Statement {
+        const constant = this.eat().type == TokenType.Const
+        const identifier = this.expect(TokenType.Identifier, "Ik verwacht hier wel ne naam he").value
+
+        if (this.at().type != TokenType.Equals) {
+            if (constant) {
+                throw "As da altij is dan moete daar wel iet aan geve he"
+            }
+            return { 
+                kind: "VariableDeclaration", 
+                constant: false, 
+                identifier: identifier, 
+                value: undefined 
+            } as VariableDeclaration
+        }
+
+        this.expect(TokenType.Equals, "Ik verwacht nen is gelijk aan")
+
+        const declaration = { 
+            kind: "VariableDeclaration", 
+            constant: constant, 
+            identifier: identifier, 
+            value: this.parse_expression() 
+        } as VariableDeclaration
+
+        return declaration
     }
 
-    private parseExpression(): Expression {
-        return this.parseAdditiveExpression()
+    private parse_statement(): Statement {
+        switch (this.at().type) {
+            case TokenType.Let:
+                return this.parse_variable_declaration()
+
+            case TokenType.Const:
+                return this.parse_variable_declaration()
+
+            default:
+                return this.parse_expression()
+        }
     }
 
-    private parseAdditiveExpression(): Expression {
-        let left = this.parseMultiplicativeExpression()
+    private parse_expression(): Expression {
+        return this.parse_additive_expression()
+    }
+
+    private parse_additive_expression(): Expression {
+        let left = this.parse_multiplicative_expression()
 
         while (this.at().value == "+" || this.at().value == "-" ) {
             const operator = this.eat().value
-            const right = this.parseMultiplicativeExpression()
+            const right = this.parse_multiplicative_expression()
 
             left = {
                 kind: "BinaryExpression",
@@ -78,12 +115,12 @@ export default class Parser {
         return left
     }
 
-    private parseMultiplicativeExpression(): Expression {
-        let left = this.parsePrimaryExpression()
+    private parse_multiplicative_expression(): Expression {
+        let left = this.parse_primary_expression()
 
         while (this.at().value == "*" || this.at().value == "/" || this.at().value == "%") {
             const operator = this.eat().value
-            const right = this.parsePrimaryExpression()
+            const right = this.parse_primary_expression()
 
             left = {
                 kind: "BinaryExpression",
@@ -96,7 +133,7 @@ export default class Parser {
         return left
     }
 
-    private parsePrimaryExpression(): Expression {
+    private parse_primary_expression(): Expression {
         const tokentype = this.at().type
 
         switch (tokentype) {
@@ -108,7 +145,7 @@ export default class Parser {
             
             case TokenType.OpenParen: {
                 this.eat()
-                const value = this.parseExpression()
+                const value = this.parse_expression()
                 this.expect(TokenType.CloseParen, "Da haakske moe dicht")
                 return value
             }
