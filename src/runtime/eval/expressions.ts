@@ -1,4 +1,4 @@
-import { BinaryExpression, Identifier } from "../../frontend/ast.ts";
+import { AssignmentExpression, BinaryExpression, Identifier } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { NumberValue, RuntimeValue, create_null } from "../values.ts";
@@ -41,4 +41,14 @@ export function evaluate_binary_expression(expression: BinaryExpression, environ
 export function evaluate_identifier(identifier: Identifier, envrionment: Environment): RuntimeValue {
     const value = envrionment.lookup_variable(identifier.symbol)
     return value
+}
+
+export function evaluate_variable_assignment(expression: AssignmentExpression, environment: Environment): RuntimeValue {
+    if (expression.assignee.kind !== "Identifier") {
+        throw `Ge kunt die waarde ni wijzige: ${JSON.stringify(expression.assignee)}`
+    }
+
+    const varname = (expression.assignee as Identifier).symbol
+
+    return environment.assign_variable(varname, evaluate(expression.value, environment))
 }

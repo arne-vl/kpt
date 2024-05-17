@@ -6,7 +6,8 @@ import {
     BinaryExpression, 
     NumericLiteral, 
     Identifier,
-    VariableDeclaration
+    VariableDeclaration,
+    AssignmentExpression
 } from "./ast.ts";
 import { tokenize, Token, TokenType } from "./lexer.ts";
 
@@ -30,7 +31,7 @@ export default class Parser {
         const prev = this.tokens.shift() as Token
 
         if(!prev || prev.type != type) {
-            console.error("Parser Fouteke:\n", err, prev, " - Kmoet dees hemme: ", type)
+            console.error("Parser Fouteke:\n", err, prev, " - Kmoet dees hemme: ", TokenType[type])
             Deno.exit(1)
         }
 
@@ -68,7 +69,7 @@ export default class Parser {
             } as VariableDeclaration
         }
 
-        this.expect(TokenType.Equals, "Ik verwacht nen is gelijk aan")
+        this.expect(TokenType.Equals, "Ik verwacht nen =")
 
         const declaration = { 
             kind: "VariableDeclaration", 
@@ -94,7 +95,19 @@ export default class Parser {
     }
 
     private parse_expression(): Expression {
-        return this.parse_additive_expression()
+        return this.parse_assignment_expression()
+    }
+
+    private parse_assignment_expression(): Expression {
+        const left = this.parse_additive_expression()
+
+        if (this.at().type == TokenType.Equals) {
+            this.eat()
+            const value = this.parse_assignment_expression()
+            return { kind: "AssignmentExpression", assignee: left, value: value } as AssignmentExpression
+        }
+        
+        return left
     }
 
     private parse_additive_expression(): Expression {

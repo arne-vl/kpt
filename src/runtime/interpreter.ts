@@ -1,8 +1,8 @@
 import { NumberValue, RuntimeValue } from "./values.ts"
-import { BinaryExpression, Identifier, NumericLiteral, Program, Statement, VariableDeclaration } from "../frontend/ast.ts"
+import { BinaryExpression, Identifier, NumericLiteral, Program, Statement, VariableDeclaration, AssignmentExpression } from "../frontend/ast.ts"
 import Environment from "./environment.ts";
 import { evaluate_program, evaluate_variable_declaration } from "./eval/statements.ts";
-import { evaluate_identifier, evaluate_binary_expression } from "./eval/expressions.ts"
+import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment } from "./eval/expressions.ts"
 
 export function evaluate(astNode: Statement, environment: Environment): RuntimeValue {
     switch (astNode.kind) {
@@ -17,6 +17,9 @@ export function evaluate(astNode: Statement, environment: Environment): RuntimeV
 
         case "BinaryExpression":
             return evaluate_binary_expression(astNode as BinaryExpression, environment)
+
+        case "AssignmentExpression":
+            return evaluate_variable_assignment(astNode as AssignmentExpression, environment)
 
         case "VariableDeclaration":
             return evaluate_variable_declaration(astNode as VariableDeclaration, environment)
