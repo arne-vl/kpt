@@ -135,11 +135,8 @@ export default class Parser {
     private parse_multiplicative_expression(): Expression {
         let left = this.parse_primary_expression()
 
-        while (this.at().value == "*" || this.at().value == "/" || this.at().value == "%") {
-            let operator = this.eat().value
-            if (this.at().value == operator) {
-                operator += this.eat().value
-            }
+        while (this.at().value == "*" || this.at().value == "/" || this.at().value == "%" || this.at().value == "**" || this.at().value == "//"){
+            const operator = this.eat().value
 
             const right = this.parse_primary_expression()
 

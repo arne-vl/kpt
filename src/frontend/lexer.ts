@@ -76,8 +76,14 @@ export function tokenize(sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Equals))
         } else if (src[0] == ";"){
             tokens.push(token(src.shift(), TokenType.Semicolon))
-        } else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%"){
-            tokens.push(token(src.shift(), TokenType.BinaryOperator))
+        } else if ((src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%") && src.length > 1){
+            if ((src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
+                const value = src.shift() == '*' ? "**" : "//";
+                tokens.push(token(value, TokenType.BinaryOperator));
+                src.shift();
+            } else {
+                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+            }
         } else {
             // Handle multi-character tokens
             
