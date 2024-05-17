@@ -8,6 +8,7 @@ export type NodeType =
     | "NumericLiteral"
     | "Identifier"
     | "BinaryExpression"
+    | "UnaryExpression"
 
 export interface Statement {
     kind: NodeType
@@ -37,6 +38,12 @@ export interface BinaryExpression extends Expression {
     kind: "BinaryExpression"
     left: Expression
     right: Expression
+    operator: string
+}
+
+export interface UnaryExpression extends Expression {
+    kind: "UnaryExpression"
+    left: Expression
     operator: string
 }
 

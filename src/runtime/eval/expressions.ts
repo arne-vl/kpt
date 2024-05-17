@@ -12,6 +12,8 @@ function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValu
         result = left.value - right.value
     } else if (operator == "*") {
         result = left.value * right.value
+    } else if (operator == "**") {
+        result = left.value ** right.value
     } else if (operator == "/") {
         
         if (right.value == 0) {
@@ -20,6 +22,8 @@ function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValu
         }
 
         result = left.value / right.value
+    } else if (operator == "//") {
+        result = Math.floor(left.value / right.value)
     } else {
         result = left.value % right.value
     }

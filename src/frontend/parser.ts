@@ -57,6 +57,8 @@ export default class Parser {
         const constant = this.eat().type == TokenType.Const
         const identifier = this.expect(TokenType.Identifier, "Ik verwacht hier wel ne naam he").value
 
+        if (this.at().type == TokenType.Semicolon) this.eat() // let x;
+
         if (this.at().type != TokenType.Equals) {
             if (constant) {
                 throw "As da altij is dan moete daar wel iet aan geve he"
@@ -77,6 +79,8 @@ export default class Parser {
             identifier: identifier, 
             value: this.parse_expression() 
         } as VariableDeclaration
+
+        if (this.at().type == TokenType.Semicolon) this.eat() // let x = 5;
 
         return declaration
     }
@@ -132,7 +136,11 @@ export default class Parser {
         let left = this.parse_primary_expression()
 
         while (this.at().value == "*" || this.at().value == "/" || this.at().value == "%") {
-            const operator = this.eat().value
+            let operator = this.eat().value
+            if (this.at().value == operator) {
+                operator += this.eat().value
+            }
+
             const right = this.parse_primary_expression()
 
             left = {

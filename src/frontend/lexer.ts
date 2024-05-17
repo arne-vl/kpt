@@ -2,7 +2,10 @@ export enum TokenType {
     Number,
     Identifier,
 
-    BinaryOperator, // + - * / %
+    BinaryOperator, // + - * / % ** //
+    UnaryOperator, // TODO: ++ --
+    AssignmentOperator, //TODO: += -= *= /= %= **=
+
     Equals, // =
     Semicolon, // ;
 
