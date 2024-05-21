@@ -16,7 +16,7 @@ async function run(filename: string){
     console.log(result)
 }
 
-function repl() {
+function _repl() {
     const parser = new Parser()
     const environment = new Environment()
 
