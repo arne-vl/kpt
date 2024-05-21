@@ -54,7 +54,7 @@ function isInt(src: string) {
 }
 
 function isSkippable(src: string) {
-    return (src == " " || src == "\n" || src == "\t")
+    return (src == " " || src == "\n" || src == "\t" || src == "\r")
 }
 
 export function tokenize(sourceCode: string): Token[] {
@@ -113,7 +113,7 @@ export function tokenize(sourceCode: string): Token[] {
             } else if (isSkippable(src[0])) {
                 src.shift() // Skip current character
             } else {
-                console.log("Kem iet gevonde dak ni ken: ", src[0])
+                console.log("Kem iet gevonde dak ni ken: \'", src[0], "\'")
                 Deno.exit(1)
             }
         }
