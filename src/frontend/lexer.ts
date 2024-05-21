@@ -21,12 +21,15 @@ export enum TokenType {
     Let, 
     Const,
 
+    Print,
+
     EOF // End Of File
 }
 
 const KEYWORDS: Record<string, TokenType> = {
     "efkes": TokenType.Let,
     "altij": TokenType.Const,
+    "zegt": TokenType.Print
 
 }
 
@@ -76,8 +79,8 @@ export function tokenize(sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Equals))
         } else if (src[0] == ";"){
             tokens.push(token(src.shift(), TokenType.Semicolon))
-        } else if ((src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%") && src.length > 1){
-            if ((src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
+        } else if ((src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%")){
+            if (src.length > 1 &&(src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
                 const value = src.shift() == '*' ? "**" : "//";
                 tokens.push(token(value, TokenType.BinaryOperator));
                 src.shift();
