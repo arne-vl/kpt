@@ -1,7 +1,7 @@
-import { AssignmentExpression, BinaryExpression, Identifier } from "../../frontend/ast.ts";
+import { AssignmentExpression, BinaryExpression, Identifier, ObjectLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { NumberValue, RuntimeValue, create_null } from "../values.ts";
+import { NumberValue, ObjectValue, RuntimeValue, create_null } from "../values.ts";
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -48,11 +48,23 @@ export function evaluate_identifier(identifier: Identifier, envrionment: Environ
 }
 
 export function evaluate_variable_assignment(expression: AssignmentExpression, environment: Environment): RuntimeValue {
-    if (expression.assignee.kind !== "Identifier") {
+    if (expression.assignee.kind != "Identifier") {
         throw `Ge kunt die waarde ni wijzige: ${JSON.stringify(expression.assignee)}`
     }
 
     const varname = (expression.assignee as Identifier).symbol
 
     return environment.assign_variable(varname, evaluate(expression.value, environment))
+}
+
+export function evaluate_object_expression(object: ObjectLiteral, environment: Environment): RuntimeValue {
+    const obj = { type: "object", properties: new Map() } as ObjectValue
+
+    for (const { key, value } of object.properties) {
+        const runtime_value = (value == undefined) ? environment.lookup_variable(key) : evaluate(value, environment)
+
+        obj.properties.set(key, runtime_value)
+    }
+
+    return obj
 }

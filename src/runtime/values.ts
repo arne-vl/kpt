@@ -2,13 +2,14 @@ export type ValueType =
     | "null"
     | "number"
     | "boolean"
+    | "object"
 
 export interface RuntimeValue {
     type: ValueType
 }
 
 export interface NullValue extends RuntimeValue {
-    type: "null",
+    type: "null"
     value: null
 }
 
@@ -17,7 +18,7 @@ export function create_null(): NullValue {
 }
 
 export interface BooleanValue extends RuntimeValue {
-    type: "boolean",
+    type: "boolean"
     value: boolean
 }
 
@@ -26,10 +27,15 @@ export function create_boolean(b = false): BooleanValue {
 }
 
 export interface NumberValue extends RuntimeValue {
-    type: "number",
+    type: "number"
     value: number
 }
 
 export function create_number(n = 0): NumberValue {
     return { type: "number", value: n}
+}
+
+export interface ObjectValue extends RuntimeValue {
+    type: "object"
+    properties: Map<string, RuntimeValue>
 }

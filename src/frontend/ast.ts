@@ -5,9 +5,13 @@ export type NodeType =
 
     // EXPRESSIONS
     | "AssignmentExpression"
+    | "BinaryExpression"
+
+    // Literals
     | "NumericLiteral"
     | "Identifier"
-    | "BinaryExpression"
+    | "ObjectLiteral"
+    | "Property"
 
 export interface Statement {
     kind: NodeType
@@ -49,3 +53,15 @@ export interface NumericLiteral extends Expression {
     kind: "NumericLiteral"
     value: number
 }
+
+export interface ObjectLiteral extends Expression {
+    kind: "ObjectLiteral"
+    properties: Property[]
+}
+
+export interface Property extends Expression {
+    kind: "Property"
+    key: string
+    value?: Expression
+}
+

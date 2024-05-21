@@ -3,7 +3,7 @@ export enum TokenType {
     Identifier,
 
     BinaryOperator, // + - * / % ** //
-    UnaryOperator, // TODO: ++ --
+    UnaryOperator, // ++ --
     AssignmentOperator, //TODO: += -= *= /= %= **=
 
     Equals, // =
@@ -17,6 +17,9 @@ export enum TokenType {
 
     OpenBrace, // {
     CloseBrace, // }
+
+    Colon, // :
+    Comma, // ,
 
     Let, 
     Const,
@@ -74,18 +77,22 @@ export function tokenize(sourceCode: string): Token[] {
         } else if (src[0] == "{"){
             tokens.push(token(src.shift(), TokenType.OpenBrace))
         } else if (src[0] == "}"){
-            tokens.push(token(src.shift(), TokenType.OpenBrace))
+            tokens.push(token(src.shift(), TokenType.CloseBrace))
         } else if (src[0] == "="){
             tokens.push(token(src.shift(), TokenType.Equals))
         } else if (src[0] == ";"){
             tokens.push(token(src.shift(), TokenType.Semicolon))
+        } else if (src[0] == ":"){
+            tokens.push(token(src.shift(), TokenType.Colon))
+        } else if (src[0] == ","){
+            tokens.push(token(src.shift(), TokenType.Comma))
         } else if ((src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%")){
             if (src.length > 1 &&(src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
                 const value = src.shift() == '*' ? "**" : "//";
                 tokens.push(token(value, TokenType.BinaryOperator));
                 src.shift();
             } else {
-                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+                tokens.push(token(src.shift(), TokenType.BinaryOperator))
             }
         } else {
             // Handle multi-character tokens

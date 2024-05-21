@@ -7,7 +7,9 @@ import {
     NumericLiteral, 
     Identifier,
     VariableDeclaration,
-    AssignmentExpression
+    AssignmentExpression,
+    Property,
+    ObjectLiteral,
 } from "./ast.ts";
 import { tokenize, Token, TokenType } from "./lexer.ts";
 
@@ -103,7 +105,7 @@ export default class Parser {
     }
 
     private parse_assignment_expression(): Expression {
-        const left = this.parse_additive_expression()
+        const left = this.parse_object_expression()
 
         if (this.at().type == TokenType.Equals) {
             this.eat()
@@ -112,6 +114,41 @@ export default class Parser {
         }
         
         return left
+    }
+
+    private parse_object_expression(): Expression {
+        if (this.at().type != TokenType.OpenBrace) {
+            return this.parse_additive_expression()
+        }
+
+        this.eat()
+        const properties = new Array<Property>()
+
+        while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
+            const key = this.expect(TokenType.Identifier, "Ge moet da ne naam geven").value
+            
+            if (this.at().type == TokenType.Comma) {
+                this.eat()
+                properties.push({ kind: "Property", key: key })
+                continue
+            } else if (this.at().type == TokenType.CloseBrace) {
+                properties.push({ kind: "Property", key: key })
+                continue
+            }
+
+            this.expect(TokenType.Colon, "Kmoet ier een : hemme")
+
+            const value = this.parse_expression()
+
+            properties.push({ kind: "Property", key: key, value: value })
+
+            if (this.at().type != TokenType.CloseBrace) {
+                this.expect(TokenType.Comma, "Kmoet ier een , of } hebbe")
+            }
+        }
+
+        this.expect(TokenType.CloseBrace, "Doet die acolade is dicht")
+        return { kind: "ObjectLiteral", properties: properties } as ObjectLiteral
     }
 
     private parse_additive_expression(): Expression {

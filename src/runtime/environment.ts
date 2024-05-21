@@ -1,10 +1,13 @@
-import { RuntimeValue, create_boolean } from "./values.ts";
+import { RuntimeValue, create_boolean, create_null } from "./values.ts";
 
-function setup_scope(environment: Environment){
+export function setup_global_environment(){
+    const environment = new Environment()
     // GLOBAL VARIABLES
     environment.declare_variable("just", create_boolean(true), true)
     environment.declare_variable("nijust", create_boolean(), true)
     environment.declare_variable("nikske", create_null(), true)
+
+    return environment
 }
 
 export default class Environment {
@@ -13,14 +16,9 @@ export default class Environment {
     private constants: Set<string>
 
     constructor(parent?: Environment) {
-        const global = parent ? true : false
         this.parent = parent
         this.variables = new Map()
         this.constants = new Set()
-
-        if (global){
-            setup_scope(this)
-        }
     }
 
     public declare_variable(name: string, value: RuntimeValue, constant: boolean): RuntimeValue {
@@ -61,8 +59,4 @@ export default class Environment {
 
         return this.parent.resolve(name)
     }
-}
-
-function create_null(): RuntimeValue {
-  throw new Error("Function not implemented.");
 }
