@@ -1,4 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
+import { CallExpression, MemberExpression } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -170,12 +171,12 @@ export default class Parser {
     }
 
     private parse_multiplicative_expression(): Expression {
-        let left = this.parse_primary_expression()
+        let left = this.parse_call_member_expression()
 
         while (this.at().value == "*" || this.at().value == "/" || this.at().value == "%" || this.at().value == "**" || this.at().value == "//"){
             const operator = this.eat().value
 
-            const right = this.parse_primary_expression()
+            const right = this.parse_call_member_expression()
 
             left = {
                 kind: "BinaryExpression",
@@ -186,6 +187,82 @@ export default class Parser {
         }
 
         return left
+    }
+
+    private parse_call_member_expression(): Expression {
+        const member = this.parse_member_expression()
+
+        if (this.at().type == TokenType.OpenParen) {
+            return this.parse_call_expression(member)
+        }
+
+        return member
+    }
+
+    private parse_call_expression(caller: Expression): Expression {
+        let call_expression: Expression = {
+            kind: "CallExpression",
+            caller,
+            args: this.parse_args()
+        } as CallExpression
+
+        if (this.at().type == TokenType.OpenParen) {
+            call_expression = this.parse_call_expression(call_expression)
+        }
+
+        return call_expression
+    }
+
+    private parse_args(): Expression[] {
+        this.expect(TokenType.OpenParen, "Kmoet ier een ( hebbe")
+
+        const args = this.at().type == TokenType.CloseParen ? [] : this.parse_args_list()
+
+        this.expect(TokenType.CloseParen, "Kmoet ier een ) hebbe")
+
+        return args
+    }
+
+    private parse_args_list(): Expression[] {
+        const args = [this.parse_assignment_expression()]
+
+        while (this.not_eof() && this.at().type == TokenType. Comma && this.eat()) {
+            args.push(this.parse_assignment_expression())
+        }
+
+        return args
+    }
+
+    private parse_member_expression(): Expression {
+        let object = this.parse_primary_expression()
+
+        while (this.at().type == TokenType.Dot || this.at().type == TokenType.OpenBracket) {
+            const operator = this.eat() 
+            let property: Expression
+            let computed: boolean
+
+            if (operator.type == TokenType.Dot) {
+                property = this.parse_primary_expression()
+                computed = false
+
+                if (property.kind != "Identifier") {
+                    throw `Ge kunt hier gen punt doen`
+                }
+            } else {
+                property = this.parse_expression()
+                computed = true
+                this.expect(TokenType.CloseBracket, "Da vierkant haakske moe dicht")
+            }
+
+            object = {
+                kind: "MemberExpression",
+                object,
+                property,
+                computed
+            } as MemberExpression
+        }
+
+        return object
     }
 
     private parse_primary_expression(): Expression {
@@ -206,7 +283,7 @@ export default class Parser {
             }
 
             default:
-                console.error("Oei khem iet gevonde dak ni had verwacht tijdes et parsen! ", this.at())
+                console.error("Oei khem iet gevonde dak ni had verwacht tijdes et parsen!", this.at())
                 Deno.exit(1)
         }
     }

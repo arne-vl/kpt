@@ -1,7 +1,7 @@
-import { AssignmentExpression, BinaryExpression, Identifier, ObjectLiteral } from "../../frontend/ast.ts";
+import { AssignmentExpression, BinaryExpression, CallExpression, Identifier, MemberExpression, ObjectLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { NumberValue, ObjectValue, RuntimeValue, create_null } from "../values.ts";
+import { InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_null } from "../values.ts";
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -67,4 +67,17 @@ export function evaluate_object_expression(object: ObjectLiteral, environment: E
     }
 
     return obj
+}
+
+export function evaluate_call_expression(expression: CallExpression, environment: Environment): RuntimeValue {
+    const args = expression.args.map((arg) => evaluate(arg, environment))
+
+    const fn = evaluate(expression.caller, environment)
+
+    if (fn.type != "internal_function") {
+        throw `Kan daar ni aan want das geen funkse`
+    }
+
+    const result = (fn as InternalFunctionValue).call(args, environment)
+    return result
 }

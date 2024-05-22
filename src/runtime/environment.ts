@@ -1,4 +1,4 @@
-import { RuntimeValue, create_boolean, create_null, create_number } from "./values.ts";
+import { RuntimeValue, create_boolean, create_internal_function, create_null, create_number } from "./values.ts";
 
 export function setup_global_environment(){
     const environment = new Environment()
@@ -7,6 +7,26 @@ export function setup_global_environment(){
     environment.declare_variable("nijust", create_boolean(), true)
     environment.declare_variable("nikske", create_null(), true)
     environment.declare_variable("pi", create_number(Math.PI), true)
+
+    environment.declare_variable(
+        "print",
+        create_internal_function((_args, _environment) => {
+            console.log(..._args)
+            return create_null()
+        }),
+        true
+    )
+
+    function timeFunction (_args: RuntimeValue[], _environment: Environment){
+        return create_number(Date.now())
+    }
+    environment.declare_variable(
+        "waduurist",
+        create_internal_function((_args, _environment) => {
+            return timeFunction(_args, _environment)
+        }),
+        true
+    )
 
     return environment
 }

@@ -28,7 +28,6 @@ export enum TokenType {
     If,
     For,
     Function,
-    Print,
 
     EOF // End Of File
 }
@@ -39,8 +38,6 @@ const KEYWORDS: Record<string, TokenType> = {
     "isda": TokenType.If,
     "veur": TokenType.For,
     "funkse": TokenType.Function,
-    "zegt": TokenType.Print,
-
 }
 
 export interface Token {
