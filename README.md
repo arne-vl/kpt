@@ -1,2 +1,31 @@
-# kpt
-KPT is short for 'Kempense Programmeer Taal' and is a custom scripting language written in TypeScript.
+# Kempense Programmeer Taal (KPT)
+
+**KPT** is short for 'Kempense Programmeer Taal' and is a custom scripting language written in TypeScript.
+
+## Keywords
+
+| KPT Keyword | TypeScript Equivalent |
+| ----------- | ---------------------- |
+| efkes       | let                    |
+| altij       | const                  |
+| isda        | if                     |
+| veur        | for                    |
+| funkse      | function               |
+| zegt        | console.log            |
+| just        | true                   |
+| nijust      | false                  |
+| nikske      | null                   |
+| pi          | Math.PI                |
+
+## Operators
+
+- `+` : Addition
+- `-` : Subtraction
+- `*` : Multiplication
+- `/` : Division
+- `%` : Modulus
+- `**` : Exponentiation
+- `//` : Floor Division
+
+---
+
