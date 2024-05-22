@@ -75,9 +75,20 @@ export function evaluate_call_expression(expression: CallExpression, environment
     const fn = evaluate(expression.caller, environment)
 
     if (fn.type != "internal_function") {
-        throw `Kan daar ni aan want das geen funkse`
+        throw `Kan daar ni aan want das geen funkse: ${expression.caller}`
     }
 
     const result = (fn as InternalFunctionValue).call(args, environment)
     return result
+}
+
+export function evaluate_member_expression(expression: MemberExpression, environment: Environment): RuntimeValue {
+    const object = evaluate(expression.object, environment) as ObjectValue
+    const property = expression.property as Identifier
+
+    if (object.properties != undefined && object.properties.has(property.symbol)) {
+        return object.properties.get(property.symbol) as NumberValue
+    } else {
+        throw `Da besta ni manneke: ${property.symbol}`
+    }
 }
