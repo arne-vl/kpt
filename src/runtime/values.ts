@@ -1,4 +1,4 @@
-import Environment from "./environment.ts";
+import Environment from "./environment/environment.ts";
 
 export type ValueType = 
     | "null"

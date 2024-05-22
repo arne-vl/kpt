@@ -1,5 +1,5 @@
 import Parser from "./src/frontend/parser.ts";
-import { setup_global_environment } from "./src/runtime/environment.ts";
+import { setup_global_environment } from "./src/runtime/environment/environment.ts";
 import { evaluate } from "./src/runtime/interpreter.ts";
 
 //_repl()

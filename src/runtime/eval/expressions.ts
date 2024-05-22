@@ -1,5 +1,5 @@
 import { AssignmentExpression, BinaryExpression, CallExpression, Identifier, MemberExpression, ObjectLiteral } from "../../frontend/ast.ts";
-import Environment from "../environment.ts";
+import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_null } from "../values.ts";
 

@@ -1,6 +1,6 @@
 import { NumberValue, RuntimeValue } from "./values.ts"
 import { BinaryExpression, Identifier, NumericLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression } from "../frontend/ast.ts"
-import Environment from "./environment.ts";
+import Environment from "./environment/environment.ts";
 import { evaluate_program, evaluate_variable_declaration } from "./eval/statements.ts";
 import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression } from "./eval/expressions.ts"
 

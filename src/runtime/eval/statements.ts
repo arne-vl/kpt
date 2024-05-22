@@ -1,5 +1,5 @@
 import { Program, VariableDeclaration } from "../../frontend/ast.ts";
-import Environment from "../environment.ts";
+import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { RuntimeValue, create_null } from "../values.ts";
 
