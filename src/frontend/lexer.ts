@@ -3,8 +3,9 @@ export enum TokenType {
     Identifier,
 
     BinaryOperator, // + - * / % ** //
-    UnaryOperator, // ++ --
+    UnaryOperator, //TODO: ++ --
     AssignmentOperator, //TODO: += -= *= /= %= **=
+    EllipsisOperator, //TODO: ..
 
     Equals, // =
     Semicolon, // ;
@@ -20,10 +21,13 @@ export enum TokenType {
 
     Colon, // :
     Comma, // ,
+    Dot, // .
 
     Let, 
     Const,
-
+    If,
+    For,
+    Function,
     Print,
 
     EOF // End Of File
@@ -32,7 +36,10 @@ export enum TokenType {
 const KEYWORDS: Record<string, TokenType> = {
     "efkes": TokenType.Let,
     "altij": TokenType.Const,
-    "zegt": TokenType.Print
+    "isda": TokenType.If,
+    "veur": TokenType.For,
+    "funkse": TokenType.Function,
+    "zegt": TokenType.Print,
 
 }
 
@@ -86,6 +93,8 @@ export function tokenize(sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Colon))
         } else if (src[0] == ","){
             tokens.push(token(src.shift(), TokenType.Comma))
+        } else if (src[0] == "."){
+            tokens.push(token(src.shift(), TokenType.Dot))
         } else if ((src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%")){
             if (src.length > 1 &&(src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
                 const value = src.shift() == '*' ? "**" : "//";
