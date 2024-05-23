@@ -36,11 +36,11 @@ export enum TokenType {
 }
 
 const KEYWORDS: Record<string, TokenType> = {
-    "efkes": TokenType.Let,
-    "altij": TokenType.Const,
-    "isda": TokenType.If,
-    "veur": TokenType.For,
-    "funkse": TokenType.Function,
+    efkes: TokenType.Let,
+    altij: TokenType.Const,
+    isda: TokenType.If,
+    veur: TokenType.For,
+    funkse: TokenType.Function,
 }
 
 export interface Token {

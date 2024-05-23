@@ -1,6 +1,6 @@
-import { NumberValue, ObjectValue } from "../values.ts";
+import { DateObject, NumberValue, ObjectValue, create_date_object, create_number } from "../values.ts";
 import { BooleanValue } from "../values.ts";
-import { create_internal_function, create_null, RuntimeValue, create_number } from "../values.ts";
+import { create_internal_function, create_null, RuntimeValue } from "../values.ts";
 import Environment from "./environment.ts";
 
 export function setup_internal_functions(environment: Environment): Environment {
@@ -25,6 +25,9 @@ export function setup_internal_functions(environment: Environment): Environment 
 }
 
 function print_function(_args: RuntimeValue[], _environment: Environment) {
+    if (_args.length == 0) {
+        console.log()
+    }
     _args.forEach(arg => {
         console.log(pretty_print(arg, 0))
     });
@@ -41,17 +44,44 @@ function pretty_print(value: RuntimeValue, indent_level: number): string {
             })
             return `{\n${formatted_properties.join(",\n")}\n${indent}}`
         }
+        case "dateobject": {
+            const date = value as DateObject
+
+            const year = date.properties.get("jaar") as NumberValue
+            const month = date.properties.get("mond") as NumberValue
+            const day = date.properties.get("dag") as NumberValue
+
+            const hours = date.properties.get("tuur") as NumberValue
+            const minutes = date.properties.get("minuut") as NumberValue
+            const seconds = date.properties.get("second") as NumberValue
+
+            const milliseconds = date.properties.get("millisecond") as NumberValue
+            return `${year.value}-${month.value}-${day.value}T${hours.value}:${minutes.value}:${seconds.value}.${milliseconds.value}Z`
+        }
         case "number":
             return (value as NumberValue).value.toString()
         case "boolean":
             return (value as BooleanValue).value == true ? "just" : "nijust"
         case "null":
-            return "null"
+            return "nikske"
         default:
             return ""
     }
 }
 
 function time_function (_args: RuntimeValue[], _environment: Environment){
-    return create_number(Date.now())
+    const date = new Date(Date.now())
+    const properties: Map<string, RuntimeValue> = new Map()
+
+    properties.set("jaar", create_number(date.getFullYear()))
+    properties.set("mond", create_number(date.getMonth() + 1))
+    properties.set("dag", create_number(date.getDate()))
+
+    properties.set("tuur", create_number(date.getHours()))
+    properties.set("minuut", create_number(date.getMinutes()))
+    properties.set("second", create_number(date.getSeconds()))
+
+    properties.set("millisecond", create_number(date.getMilliseconds()))
+
+    return create_date_object(properties)
 }

@@ -3,7 +3,7 @@ import { setup_global_environment } from "./src/runtime/environment/environment.
 import { evaluate } from "./src/runtime/interpreter.ts";
 
 //_repl()
-_run("test/test.kpt")
+_run("examples/example.kpt")
 
 async function _run(filename: string){
     const parser = new Parser()

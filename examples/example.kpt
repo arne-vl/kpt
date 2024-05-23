@@ -1,0 +1,34 @@
+altij x = just
+
+efkes y = pi
+
+altij c = nijust
+
+altij z = {
+    x,
+    y,
+    a: c,
+    b: {
+        ja: just,
+        nee: nijust
+    }
+}
+
+zegt (z)
+
+y = y + 4
+
+zegt (y)
+
+funkse optelle (x, y) {
+    x + y
+}
+
+zegt(optelle(y, 9))
+
+
+altij datum = waduurist()
+
+zegt ()
+zegt(datum)
+zegt(datum.jaar, datum.mond, datum.dag)

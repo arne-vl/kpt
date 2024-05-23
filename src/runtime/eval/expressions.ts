@@ -1,7 +1,7 @@
 import { AssignmentExpression, BinaryExpression, CallExpression, Identifier, MemberExpression, ObjectLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_null } from "../values.ts";
+import { FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_null } from "../values.ts";
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -74,12 +74,33 @@ export function evaluate_call_expression(expression: CallExpression, environment
 
     const fn = evaluate(expression.caller, environment)
 
-    if (fn.type != "internal_function") {
-        throw `Kan daar ni aan want das geen funkse: ${expression.caller}`
+    if (fn.type == "internal_function" ) {
+        return (fn as InternalFunctionValue).call(args, environment)
+    } else if (fn.type == "function") {
+        const functionvalue = fn as FunctionValue 
+        const scope = new Environment(functionvalue.declaration_environment)
+
+        if (args.length != functionvalue.parameters.length) {
+            throw `Ni genoeg parameters jong`
+        }
+
+        for (let i = 0; i < functionvalue.parameters.length; i++) {
+            const varname = functionvalue.parameters[i]
+            const value = args[i]
+
+            scope.declare_variable(varname, value, false)
+        }
+
+        let result: RuntimeValue = create_null()
+
+        for (const statement of functionvalue.body) {
+            result = evaluate(statement, scope)
+        }
+
+        return result
     }
 
-    const result = (fn as InternalFunctionValue).call(args, environment)
-    return result
+    throw `Kan da ni want das geen funkse: ${expression.caller}`
 }
 
 export function evaluate_member_expression(expression: MemberExpression, environment: Environment): RuntimeValue {

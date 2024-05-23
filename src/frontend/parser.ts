@@ -8,6 +8,7 @@ import {
     NumericLiteral, 
     Identifier,
     VariableDeclaration,
+    FunctionDeclaration,
     AssignmentExpression,
     Property,
     ObjectLiteral,
@@ -88,6 +89,40 @@ export default class Parser {
         return declaration
     }
 
+    private parse_function_declaration(): Statement {
+        this.eat()
+        const name = this.expect(TokenType.Identifier, "Een funkse moe ne naam hemme").value
+
+        const args = this.parse_args()
+        const parameters: string[] = []
+        for (const arg of args) {
+            if (arg.kind != "Identifier") {
+                console.log(arg)
+                throw `dees is ni just`
+            }
+
+            parameters.push((arg as Identifier).symbol)
+        }
+
+        this.expect(TokenType.OpenBrace, "Ge moe { gebruike voor funkses")
+
+        const body: Statement[] = []
+
+        while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
+            body.push(this.parse_statement())
+        }
+
+        this.expect(TokenType.CloseBrace, "Ge moe ok wel } doen")
+
+        return {
+          kind: "FunctionDeclaration",
+          name: name,
+          parameters: parameters,
+          body: body
+        } as FunctionDeclaration
+
+    }
+
     private parse_statement(): Statement {
         switch (this.at().type) {
             case TokenType.Let:
@@ -95,6 +130,9 @@ export default class Parser {
 
             case TokenType.Const:
                 return this.parse_variable_declaration()
+
+            case TokenType.Function:
+                return this.parse_function_declaration()
 
             default:
                 return this.parse_expression()

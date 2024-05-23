@@ -1,3 +1,4 @@
+import { Statement } from "../frontend/ast.ts";
 import Environment from "./environment/environment.ts";
 
 export type ValueType = 
@@ -5,7 +6,9 @@ export type ValueType =
     | "number"
     | "boolean"
     | "object"
+    | "dateobject"
     | "internal_function"
+    | "function"
 
 export interface RuntimeValue {
     type: ValueType
@@ -38,9 +41,24 @@ export function create_number(n = 0): NumberValue {
     return { type: "number", value: n}
 }
 
-export interface ObjectValue extends RuntimeValue {
+export interface Object extends RuntimeValue {}
+
+export interface ObjectValue extends Object {
     type: "object"
     properties: Map<string, RuntimeValue>
+}
+
+export function create_object(properties: Map<string, RuntimeValue>): ObjectValue {
+    return { type: "object", properties: properties }
+}
+
+export interface DateObject extends Object {
+    type: "dateobject"
+    properties: Map<string, RuntimeValue>
+}
+
+export function create_date_object(properties: Map<string, RuntimeValue>): DateObject {
+    return { type: "dateobject", properties: properties }
 }
 
 export type FunctionCall = (args: RuntimeValue[], environment: Environment) => RuntimeValue
@@ -52,4 +70,12 @@ export interface InternalFunctionValue extends RuntimeValue {
 
 export function create_internal_function(call: FunctionCall) {
     return { type: "internal_function", call } as InternalFunctionValue
+}
+
+export interface FunctionValue extends RuntimeValue {
+    type: "function"
+    name: string
+    parameters: string[]
+    declaration_environment: Environment
+    body: Statement[]
 }

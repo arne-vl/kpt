@@ -16,6 +16,9 @@
 | nijust      | false                  |
 | nikske      | null                   |
 | pi          | Math.PI                |
+| zegt()      | console.log()          |
+| waduurist() | new Date(Date.now())   |
+| funkse      | function               |
 
 ## Operators
 
