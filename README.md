@@ -36,7 +36,7 @@ deno run -A main.ts
 - `//` : Floor Division
 
 <details>
- <summary>Functionalities</summary>
+ <summary><h1>Functionalities</h1></summary>
  <ul>
     <li>Functions return the last evaluated statement automatically</li>
  </ul>
