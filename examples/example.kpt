@@ -1,4 +1,4 @@
-altij x = just
+altij x = 14
 
 efkes y = pi
 
@@ -14,11 +14,12 @@ altij z = {
     }
 }
 
-zegt (z)
+zegt(z)
+zegt()
 
 y = y + 4
 
-zegt (y)
+zegt(y)
 
 funkse optelle (x, y) {
     x + y
@@ -29,6 +30,6 @@ zegt(optelle(y, 9))
 
 altij datum = waduurist()
 
-zegt ()
+zegt()
 zegt(datum)
 zegt(datum.jaar, datum.mond, datum.dag)

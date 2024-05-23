@@ -26,48 +26,51 @@ export function setup_internal_functions(environment: Environment): Environment 
 
 function print_function(_args: RuntimeValue[], _environment: Environment) {
     if (_args.length == 0) {
-        console.log()
+        console.log();
+        return;
     }
-    _args.forEach(arg => {
-        console.log(pretty_print(arg, 0))
-    });
+
+    const output = _args.map(arg => pretty_print(arg, 0)).join(' ');
+    console.log(output);
 }
 
 function pretty_print(value: RuntimeValue, indent_level: number): string {
-    const indent = '  '.repeat(indent_level)
+    const indent = '  '.repeat(indent_level);
     switch (value.type) {
         case "object": {
-            const entries = Array.from((value as ObjectValue).properties.entries())
+            const entries = Array.from((value as ObjectValue).properties.entries());
             const formatted_properties = entries.map(([key, val]) => {
-                const nested_indent = '  '.repeat(indent_level + 1)
-                return `${nested_indent}${key}: ${pretty_print(val, indent_level + 1)}`
-            })
-            return `{\n${formatted_properties.join(",\n")}\n${indent}}`
+                const nested_indent = '  '.repeat(indent_level + 1);
+                return `${nested_indent}${key}: ${pretty_print(val, indent_level + 1)}`;
+            });
+            return `{${formatted_properties.length > 0 ? '\n' + formatted_properties.join(",\n") + '\n' + indent : ''}}`;
         }
         case "dateobject": {
-            const date = value as DateObject
+            const date = value as DateObject;
 
-            const year = date.properties.get("jaar") as NumberValue
-            const month = date.properties.get("mond") as NumberValue
-            const day = date.properties.get("dag") as NumberValue
+            const year = (date.properties.get("jaar") as NumberValue).value;
+            const month = (date.properties.get("mond") as NumberValue).value;
+            const day = (date.properties.get("dag") as NumberValue).value;
 
-            const hours = date.properties.get("tuur") as NumberValue
-            const minutes = date.properties.get("minuut") as NumberValue
-            const seconds = date.properties.get("second") as NumberValue
+            const hours = (date.properties.get("tuur") as NumberValue).value;
+            const minutes = (date.properties.get("minuut") as NumberValue).value;
+            const seconds = (date.properties.get("second") as NumberValue).value;
 
-            const milliseconds = date.properties.get("millisecond") as NumberValue
-            return `${year.value}-${month.value}-${day.value}T${hours.value}:${minutes.value}:${seconds.value}.${milliseconds.value}Z`
+            const milliseconds = (date.properties.get("millisecond") as NumberValue).value;
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
         }
         case "number":
-            return (value as NumberValue).value.toString()
+            return (value as NumberValue).value.toString();
         case "boolean":
-            return (value as BooleanValue).value == true ? "just" : "nijust"
+            return (value as BooleanValue).value ? "just" : "nijust";
         case "null":
-            return "nikske"
+            return "nikske";
         default:
-            return ""
+            return "";
     }
 }
+
+
 
 function time_function (_args: RuntimeValue[], _environment: Environment){
     const date = new Date(Date.now())

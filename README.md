@@ -30,5 +30,8 @@
 - `**` : Exponentiation
 - `//` : Floor Division
 
----
 
+## Running example file
+```shell
+deno run -A main.ts
+```
