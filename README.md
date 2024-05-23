@@ -2,6 +2,11 @@
 
 **KPT** is short for 'Kempense Programmeer Taal' and is a custom scripting language written in TypeScript.
 
+## Running example file
+```shell
+deno run -A main.ts
+```
+
 ## Keywords
 
 | KPT Keyword | TypeScript Equivalent |
@@ -30,8 +35,9 @@
 - `**` : Exponentiation
 - `//` : Floor Division
 
-
-## Running example file
-```shell
-deno run -A main.ts
-```
+<details>
+ <summary>Functionalities</summary>
+ <ul>
+    <li>Functions return the last evaluated statement automatically</li>
+ </ul>
+</details>
