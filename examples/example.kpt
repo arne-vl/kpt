@@ -7,7 +7,7 @@ altij z = {
     a: c,
     b: {
         ja: just,
-        nee: "hallo"
+        nee: 'hallo'
     }
 }
 

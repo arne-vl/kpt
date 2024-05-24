@@ -338,6 +338,24 @@ export default class Parser {
                 return { kind: "StringLiteral", value: value } as StringLiteral
             }
 
+            case TokenType.Quote: {
+                this.eat()
+
+                let value = ""
+
+                while (this.at().type != TokenType.Quote && this.not_eof()) {
+                    if (value == "") {
+                        value = this.eat().value
+                    } else {
+                        value = value + " " + this.eat().value
+                    }
+                }
+
+                this.expect(TokenType.Quote, "Ne zin moete afsluite")
+
+                return { kind: "StringLiteral", value: value } as StringLiteral
+            }
+
             default:
                 console.error("Oei khem iet gevonde dak ni had verwacht tijdes et parsen!", this.at())
                 Deno.exit(1)

@@ -64,9 +64,9 @@ function pretty_print(value: RuntimeValue, indent_level: number): string {
         case "string":
             return (value as StringValue).value
         case "function":
-            return `${(value as FunctionValue).name}: function`
+            return `<${(value as FunctionValue).name}: funkse>`
         case "internal_function":
-            return "internal function"
+            return "<inwendige funkse>"
         case "boolean":
             return (value as BooleanValue).value ? "just" : "nijust";
         case "null":
