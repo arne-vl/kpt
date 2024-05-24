@@ -37,3 +37,5 @@ deno run -A main.ts
 
 ## Functionalities
 - Functions return the last evaluated statement automatically
+- Strings can be defined using `'` and `"`
+- Place comments using `#`

@@ -24,6 +24,7 @@ funkse optelle (x, y) {
 
 zegt(optelle(y, 9))
 
+# hallo
 
 altij datum = waduurist()
 
@@ -34,6 +35,8 @@ zegt(datum.jaar, datum.mond, datum.dag)
 altij string = "Juw wereld"
 
 zegt(string)
+#zegt(string)
 zegt("en houdoe e")
 
 zegt(optelle)
+# commentaar ja

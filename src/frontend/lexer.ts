@@ -28,8 +28,8 @@ export enum TokenType {
 
     Let, 
     Const,
-    If,
-    For,
+    If, // TODO
+    For, // TODO
     Function,
 
     EOF // End Of File
@@ -52,18 +52,22 @@ function token(value: string = "", type: TokenType): Token {
     return { value, type }
 }
 
-function isAlpha(src: string) {
+function is_alpha(src: string) {
     return src.toUpperCase() != src.toLowerCase()
 }
 
-function isInt(src: string) {
+function is_int(src: string) {
     const c = src.charCodeAt(0)
     const bounds = ["0".charCodeAt(0), "9".charCodeAt(0)]
 
     return (c >= bounds[0] && c <= bounds[1])
 }
 
-function isSkippable(src: string) {
+function is_new_line(src: string) {
+    return src == "\n"
+}
+
+function is_skippable(src: string) {
     return (src == " " || src == "\n" || src == "\t" || src == "\r")
 }
 
@@ -110,16 +114,16 @@ export function tokenize(sourceCode: string): Token[] {
         } else {
             // Handle multi-character tokens
             
-            if(isInt(src[0])) {
+            if(is_int(src[0])) {
                 let num = ""
-                while (src.length > 0 && isInt(src[0])) {
+                while (src.length > 0 && is_int(src[0])) {
                     num += src.shift()
                 }
 
                 tokens.push(token(num, TokenType.Number))
-            } else if (isAlpha(src[0])) {
+            } else if (is_alpha(src[0])) {
                 let identifier = ""
-                while (src.length > 0 && isAlpha(src[0])) {
+                while (src.length > 0 && is_alpha(src[0])) {
                     identifier += src.shift()
                 }
 
@@ -130,8 +134,13 @@ export function tokenize(sourceCode: string): Token[] {
                 } else {
                     tokens.push(token(identifier, TokenType.Identifier))
                 }
-            } else if (isSkippable(src[0])) {
+            } else if (is_skippable(src[0])) {
                 src.shift() // Skip current character
+            } else if (src[0] == "#") {
+                src.shift()
+                while (src.length > 0 && !is_new_line(src[0])) {
+                    src.shift()
+                }
             } else {
                 console.log("Kem iet gevonde dak ni ken: \'", src[0], "\'")
                 Deno.exit(1)
