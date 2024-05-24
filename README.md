@@ -35,9 +35,5 @@ deno run -A main.ts
 - `**` : Exponentiation
 - `//` : Floor Division
 
-<details>
- <summary><h2>Functionalities1</h2></summary>
- <ul>
-    <li>Functions return the last evaluated statement automatically</li>
- </ul>
-</details>
+## Functionalities
+- Functions return the last evaluated statement automatically
