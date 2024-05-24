@@ -1,4 +1,4 @@
-import { DateObject, NumberValue, ObjectValue, create_date_object, create_number } from "../values.ts";
+import { DateObject, FunctionValue, NumberValue, ObjectValue, StringValue, create_date_object, create_number } from "../values.ts";
 import { BooleanValue } from "../values.ts";
 import { create_internal_function, create_null, RuntimeValue } from "../values.ts";
 import Environment from "./environment.ts";
@@ -61,6 +61,12 @@ function pretty_print(value: RuntimeValue, indent_level: number): string {
         }
         case "number":
             return (value as NumberValue).value.toString();
+        case "string":
+            return (value as StringValue).value
+        case "function":
+            return `${(value as FunctionValue).name}: function`
+        case "internal_function":
+            return "internal function"
         case "boolean":
             return (value as BooleanValue).value ? "just" : "nijust";
         case "null":

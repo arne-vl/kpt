@@ -4,6 +4,7 @@ import Environment from "./environment/environment.ts";
 export type ValueType = 
     | "null"
     | "number"
+    | "string"
     | "boolean"
     | "object"
     | "dateobject"
@@ -39,6 +40,15 @@ export interface NumberValue extends RuntimeValue {
 
 export function create_number(n = 0): NumberValue {
     return { type: "number", value: n}
+}
+
+export interface StringValue extends RuntimeValue {
+    type: "string"
+    value: string
+}
+
+export function create_string(n = ""): StringValue {
+    return { type: "string", value: n}
 }
 
 export interface Object extends RuntimeValue {}

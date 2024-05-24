@@ -1,5 +1,5 @@
-import { NumberValue, RuntimeValue } from "./values.ts"
-import { BinaryExpression, Identifier, NumericLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration } from "../frontend/ast.ts"
+import { NumberValue, RuntimeValue, StringValue } from "./values.ts"
+import { BinaryExpression, Identifier, NumericLiteral, StringLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration } from "../frontend/ast.ts"
 import Environment from "./environment/environment.ts";
 import { evaluate_fuction_declaration, evaluate_program, evaluate_variable_declaration } from "./eval/statements.ts";
 import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression } from "./eval/expressions.ts"
@@ -11,6 +11,12 @@ export function evaluate(astNode: Statement, environment: Environment): RuntimeV
                 type: "number",
                 value: ((astNode as NumericLiteral).value)
             } as NumberValue
+
+        case "StringLiteral": 
+            return {
+                type: "string",
+                value: ((astNode as StringLiteral).value)
+            } as StringValue
 
         case "Identifier":
             return evaluate_identifier(astNode as Identifier, environment)

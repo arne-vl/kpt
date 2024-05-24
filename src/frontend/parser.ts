@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { CallExpression, MemberExpression } from "./ast.ts";
+import { CallExpression, MemberExpression, StringLiteral } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -318,6 +318,24 @@ export default class Parser {
                 const value = this.parse_expression()
                 this.expect(TokenType.CloseParen, "Da haakske moe dicht")
                 return value
+            }
+
+            case TokenType.DoubleQuote: {
+                this.eat()
+
+                let value = ""
+
+                while (this.at().type != TokenType.DoubleQuote && this.not_eof()) {
+                    if (value == "") {
+                        value = this.eat().value
+                    } else {
+                        value = value + " " + this.eat().value
+                    }
+                }
+
+                this.expect(TokenType.DoubleQuote, "Ne zin moete afsluite")
+
+                return { kind: "StringLiteral", value: value } as StringLiteral
             }
 
             default:

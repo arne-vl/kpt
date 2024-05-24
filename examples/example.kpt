@@ -1,16 +1,13 @@
 altij x = 14
-
 efkes y = pi
-
 altij c = nijust
-
 altij z = {
     x,
     y,
     a: c,
     b: {
         ja: just,
-        nee: nijust
+        nee: "hallo"
     }
 }
 
@@ -33,3 +30,10 @@ altij datum = waduurist()
 zegt()
 zegt(datum)
 zegt(datum.jaar, datum.mond, datum.dag)
+
+altij string = "Juw wereld"
+
+zegt(string)
+zegt("en houdoe e")
+
+zegt(optelle)
