@@ -33,7 +33,7 @@ function repl() {
         const input = prompt(">>")
 
         if (!input || input.includes("deruit")) {
-            Deno.exit(1)
+            Deno.exit(0)
         }
 
         const program = parser.produce_ast(input)        
