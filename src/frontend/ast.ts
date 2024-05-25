@@ -3,6 +3,7 @@ export type NodeType =
     | "Program"
     | "VariableDeclaration"
     | "FunctionDeclaration"
+    | "IfStatement"
 
     // EXPRESSIONS
     | "AssignmentExpression"
@@ -38,6 +39,12 @@ export interface FunctionDeclaration extends Statement {
     kind: "FunctionDeclaration"
     name: string
     parameters: string[]
+    body: Statement[]
+}
+
+export interface IfStatement extends Statement {
+    kind: "IfStatement"
+    statement: Statement
     body: Statement[]
 }
 

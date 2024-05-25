@@ -1,10 +1,17 @@
 # Kempense Programmeer Taal (KPT)
 
-**KPT** is short for 'Kempense Programmeer Taal' and is a custom scripting language written in TypeScript.
+**KPT** is short for 'Kempense Programmeer Taal' and is a custom scripting language written in TypeScript.  
+Check examples for some functionalities>
 
-## Running example file
+## Running the repl
 ```shell
-deno run -A main.ts
+deno run -A main.ts repl
+```
+To exit the repl use `deruit`
+
+## Running a file
+```shell
+deno run -A main.ts file.kpt
 ```
 
 ## Keywords
@@ -22,9 +29,9 @@ deno run -A main.ts
 | zegt()      | console.log()          |
 | waduurist() | new Date(Date.now())   |
 | funkse      | function               |
+| isda        | if                     |
 
 ## Supported Operators
-
 - `+` : Addition
 - `-` : Subtraction
 - `*` : Multiplication

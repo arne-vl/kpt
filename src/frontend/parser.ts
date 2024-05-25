@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { CallExpression, ComparisonExpression, MemberExpression, StringLiteral } from "./ast.ts";
+import { CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -125,6 +125,30 @@ export default class Parser {
 
     }
 
+    private parse_if_statement(): Statement {
+        this.eat()
+
+        const statement = this.parse_statement()
+
+        this.expect(TokenType.OpenBrace, "Ge moe { gebruike voor isda")
+
+        const body: Statement[] = []
+        
+        while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
+            body.push(this.parse_statement())
+        }
+
+        this.expect(TokenType.CloseBrace, "Ge moe ok wel } doen")
+
+        if (this.at().type == TokenType.Semicolon) this.eat()
+
+        return {
+            kind: "IfStatement",
+            statement: statement,
+            body: body
+        } as IfStatement
+    }
+
     private parse_statement(): Statement {
         switch (this.at().type) {
             case TokenType.Let:
@@ -135,6 +159,9 @@ export default class Parser {
 
             case TokenType.Function:
                 return this.parse_function_declaration()
+
+            case TokenType.If:
+                return this.parse_if_statement()
 
             default:
                 return this.parse_expression()

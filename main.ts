@@ -2,10 +2,19 @@ import Parser from "./src/frontend/parser.ts";
 import { setup_global_environment } from "./src/runtime/environment/environment.ts";
 import { evaluate } from "./src/runtime/interpreter.ts";
 
-//_repl()
-_run("examples/example.kpt")
+const args = Deno.args
 
-async function _run(filename: string){
+if (args.length != 1) {
+    throw `Kmoet een argument hebbe`
+}
+
+if (args[0] == "repl") {
+    repl()
+} else {
+    run(args[0])
+}
+
+async function run(filename: string){
     const parser = new Parser()
     const environment = setup_global_environment()
 
@@ -14,7 +23,7 @@ async function _run(filename: string){
     evaluate(program, environment)
 }
 
-function _repl() {
+function repl() {
     const parser = new Parser()
     const environment = setup_global_environment()
 

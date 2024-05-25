@@ -1,0 +1,14 @@
+altij x = 5
+altij y = 8
+
+efkes test
+
+funkse optelle (a, b) {
+    test = 9
+    a + b # automatically returns last evaluated statement
+};
+
+altij resultaat = optelle(x, y)
+
+zegt(resultaat)
+zegt(test)

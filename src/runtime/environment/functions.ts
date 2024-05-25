@@ -8,30 +8,30 @@ export function setup_internal_functions(environment: Environment): Environment 
         "zegt",
         create_internal_function((_args, _environment) => {
             print_function(_args, _environment);
-            return create_null();
+            return create_null()
         }),
         true
-    );
+    )
 
     environment.declare_variable(
         "waduurist",
         create_internal_function((_args, _environment) => {
-            return time_function(_args, _environment);
+            return time_function(_args, _environment)
         }),
         true
-    );
+    )
 
     return environment;
 }
 
 function print_function(_args: RuntimeValue[], _environment: Environment) {
     if (_args.length == 0) {
-        console.log();
-        return;
+        console.log()
+        return
     }
 
     const output = _args.map(arg => pretty_print(arg, 0)).join(' ');
-    console.log(output);
+    console.log(output)
 }
 
 function pretty_print(value: RuntimeValue, indent_level: number): string {
@@ -40,27 +40,27 @@ function pretty_print(value: RuntimeValue, indent_level: number): string {
         case "object": {
             const entries = Array.from((value as ObjectValue).properties.entries());
             const formatted_properties = entries.map(([key, val]) => {
-                const nested_indent = '  '.repeat(indent_level + 1);
-                return `${nested_indent}${key}: ${pretty_print(val, indent_level + 1)}`;
+                const nested_indent = '  '.repeat(indent_level + 1)
+                return `${nested_indent}${key}: ${pretty_print(val, indent_level + 1)}`
             });
-            return `{${formatted_properties.length > 0 ? '\n' + formatted_properties.join(",\n") + '\n' + indent : ''}}`;
+            return `{${formatted_properties.length > 0 ? '\n' + formatted_properties.join(",\n") + '\n' + indent : ''}}`
         }
         case "dateobject": {
             const date = value as DateObject;
 
-            const year = (date.properties.get("jaar") as NumberValue).value;
-            const month = (date.properties.get("mond") as NumberValue).value;
-            const day = (date.properties.get("dag") as NumberValue).value;
+            const year = (date.properties.get("jaar") as NumberValue).value
+            const month = (date.properties.get("mond") as NumberValue).value
+            const day = (date.properties.get("dag") as NumberValue).value
 
-            const hours = (date.properties.get("tuur") as NumberValue).value;
-            const minutes = (date.properties.get("minuut") as NumberValue).value;
-            const seconds = (date.properties.get("second") as NumberValue).value;
+            const hours = (date.properties.get("tuur") as NumberValue).value
+            const minutes = (date.properties.get("minuut") as NumberValue).value
+            const seconds = (date.properties.get("second") as NumberValue).value
 
-            const milliseconds = (date.properties.get("millisecond") as NumberValue).value;
-            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`;
+            const milliseconds = (date.properties.get("millisecond") as NumberValue).value
+            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`
         }
         case "number":
-            return (value as NumberValue).value.toString();
+            return (value as NumberValue).value.toString()
         case "string":
             return (value as StringValue).value
         case "function":
@@ -68,17 +68,15 @@ function pretty_print(value: RuntimeValue, indent_level: number): string {
         case "internal_function":
             return "<inwendige funkse>"
         case "boolean":
-            return (value as BooleanValue).value ? "just" : "nijust";
+            return (value as BooleanValue).value ? "just" : "nijust"
         case "null":
-            return "nikske";
+            return "nikske"
         default:
             return "";
     }
 }
 
-
-
-function time_function (_args: RuntimeValue[], _environment: Environment){
+function time_function(_args: RuntimeValue[], _environment: Environment) {
     const date = new Date(Date.now())
     const properties: Map<string, RuntimeValue> = new Map()
 

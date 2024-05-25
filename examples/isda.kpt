@@ -1,0 +1,16 @@
+# == >= <= not yet implemented
+
+altij x = 10
+altij y = 5
+
+isda (just) {
+    zegt("das altij just")
+}
+
+isda (x > y) {
+    zegt("das ok just")
+}
+
+isda (x < y) {
+    zegt("das ni just")
+}

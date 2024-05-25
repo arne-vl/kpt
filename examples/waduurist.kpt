@@ -1,0 +1,6 @@
+altij datum = waduurist()
+
+zegt(datum)
+
+# jaar mond dag tuur minuut second millisecond
+zegt(datum.jaar, datum.mond)

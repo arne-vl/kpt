@@ -1,0 +1,19 @@
+# Cannot yet change object members
+
+altij x = 14
+efkes y = pi
+altij c = nijust
+
+altij z = {
+    x,
+    y,
+    a: c,
+    b: {
+        ja: just,
+        nee: 'hallo'
+    }
+}
+
+zegt(z)
+zegt()
+zegt(z.b.nee)

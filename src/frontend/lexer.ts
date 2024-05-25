@@ -29,7 +29,7 @@ export enum TokenType {
 
     Let, 
     Const,
-    If, // TODO
+    If,
     For, // TODO
     Function,
 

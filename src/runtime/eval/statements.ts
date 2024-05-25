@@ -1,7 +1,7 @@
-import { Program, VariableDeclaration, FunctionDeclaration } from "../../frontend/ast.ts";
+import { Program, VariableDeclaration, FunctionDeclaration, IfStatement } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { FunctionValue, RuntimeValue, create_null } from "../values.ts";
+import { BooleanValue, FunctionValue, RuntimeValue, create_null } from "../values.ts";
 
 
 export function evaluate_program(program: Program, environment: Environment): RuntimeValue {
@@ -29,4 +29,22 @@ export function evaluate_fuction_declaration(declaration: FunctionDeclaration, e
     } as FunctionValue
 
     return environment.declare_variable(declaration.name, fn, true)
+}
+
+export function evaluate_if_statement(statement: IfStatement, environment: Environment): RuntimeValue {
+    const execute = evaluate(statement.statement, environment)
+
+    if (execute.type != "boolean") {
+        throw `Isda ga alleen as het just of nijust is`
+    }
+
+    let result: RuntimeValue = create_null()
+
+    if ((execute as BooleanValue).value == true) {
+        for (const s of statement.body) {
+            result = evaluate(s, environment)
+        }
+    }
+
+    return result
 }
