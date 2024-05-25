@@ -4,11 +4,11 @@ import { evaluate } from "./src/runtime/interpreter.ts";
 
 const args = Deno.args
 
-if (args.length != 1) {
-    throw `Kmoet een argument hebbe`
+if (args.length > 1) {
+    throw `Kmoet gen of 1 argument hebbe`
 }
 
-if (args[0] == "repl") {
+if (args.length == 0) {
     repl()
 } else {
     run(args[0])
