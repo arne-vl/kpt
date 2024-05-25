@@ -7,7 +7,7 @@ Check examples for some functionalities>
 ```shell
 deno run -A main.ts repl
 ```
-To exit the repl use `deruit`
+> To exit the repl use `deruit`
 
 ## Running a file
 ```shell
