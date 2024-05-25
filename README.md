@@ -5,7 +5,7 @@ Check examples for some functionalities>
 
 ## Running the repl
 ```shell
-deno run -A main.ts repl
+deno run -A main.ts
 ```
 > To exit the repl use `deruit`
 
