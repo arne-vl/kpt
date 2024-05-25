@@ -36,7 +36,7 @@ deno run -A main.ts
 - `>` : Greater than (only numbers)
 
 ## Functionalities
-- No need for ;
+- No need for ; (but should be possible)
 - Functions return the last evaluated statement automatically
 - Strings can be defined using `'` and `"`
 - Place comments using `#`

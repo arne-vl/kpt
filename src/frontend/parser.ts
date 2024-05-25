@@ -84,7 +84,7 @@ export default class Parser {
             value: this.parse_expression() 
         } as VariableDeclaration
 
-        if (this.at().type == TokenType.Semicolon) this.eat() // let x = 5;
+        if (this.at().type == TokenType.Semicolon) this.eat()
 
         return declaration
     }
@@ -113,6 +113,8 @@ export default class Parser {
         }
 
         this.expect(TokenType.CloseBrace, "Ge moe ok wel } doen")
+
+        if (this.at().type == TokenType.Semicolon) this.eat()
 
         return {
           kind: "FunctionDeclaration",
@@ -265,6 +267,8 @@ export default class Parser {
         if (this.at().type == TokenType.OpenParen) {
             call_expression = this.parse_call_expression(call_expression)
         }
+
+        if (this.at().type == TokenType.Semicolon) this.eat()
 
         return call_expression
     }

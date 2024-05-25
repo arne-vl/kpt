@@ -16,21 +16,21 @@ zegt()
 
 y = y + 4
 
-zegt(y)
+zegt(y);
 
 funkse optelle (x, y) {
     x + y
-}
+};
 
 zegt(optelle(y, 9))
 
 # hallo
 
-altij datum = waduurist()
+altij datum = waduurist();
 
 zegt()
 zegt(datum)
-zegt(datum.jaar, datum.mond, datum.dag)
+zegt(datum.jaar, datum.mond, datum.dag);
 
 altij string = "Juw wereld"
 
