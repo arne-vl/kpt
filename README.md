@@ -25,7 +25,7 @@ deno run -A main.ts
 | waduurist() | new Date(Date.now())   |
 | funkse      | function               |
 
-## Operators
+## Supported Operators
 
 - `+` : Addition
 - `-` : Subtraction
@@ -34,6 +34,8 @@ deno run -A main.ts
 - `%` : Modulus
 - `**` : Exponentiation
 - `//` : Floor Division
+- `<` : Less than (only numbers)
+- `>` : Greater than (only numbers)
 
 ## Functionalities
 - No need for ;
