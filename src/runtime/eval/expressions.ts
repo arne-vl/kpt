@@ -1,4 +1,4 @@
-import { AssignmentExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral } from "../../frontend/ast.ts";
+import { AssignmentExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, VariableDeclaration } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_boolean, create_null } from "../values.ts";
@@ -39,6 +39,21 @@ export function evaluate_binary_expression(expression: BinaryExpression, environ
         return evaluate_numeric_binary_expression(left as NumberValue, right as NumberValue, expression.operator)
     }
 
+    return create_null()
+}
+
+export function evaluate_unary_expression(expression: UnaryExpression, environment: Environment): RuntimeValue {
+    const left = evaluate(expression.left, environment)
+
+    if(left.type == "number") {
+        const name = (expression.left as Identifier).symbol
+        const number = left as NumberValue
+
+        number.value = expression.operator == "++" ? number.value + 1 : number.value - 1
+
+        return environment.assign_variable(name, number)
+    }
+    
     return create_null()
 }
 

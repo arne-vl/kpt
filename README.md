@@ -33,7 +33,9 @@ deno run -A main.ts file.kpt
 
 ## Supported Operators
 - `+` : Addition
+- `++` : Increment
 - `-` : Subtraction
+- `--` : Decrement
 - `*` : Multiplication
 - `/` : Division
 - `%` : Modulus

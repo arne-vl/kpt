@@ -1,0 +1,32 @@
+# decimal numbers are not yet supported
+
+# Addition
+zegt(1 + 2)
+
+# Increment
+efkes x = 5
+x++
+zegt(x)
+
+# Subtraction
+zegt(6-3)
+
+# Decrement
+x = 9
+x--
+zegt(x)
+
+# Multiplication
+zegt(2*5)
+
+# Division
+zegt(100/3)
+
+# Modulus
+zegt(100%3)
+
+# Exponentiation
+zegt(5**2)
+
+# Floor Division
+zegt(100//30)

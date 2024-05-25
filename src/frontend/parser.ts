@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral } from "./ast.ts";
+import { CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -239,6 +239,20 @@ export default class Parser {
 
     private parse_additive_expression(): Expression {
         let left = this.parse_multiplicative_expression()
+
+        if (this.at().type == TokenType.UnaryOperator) {
+            const operator = this.eat().value
+
+            if (left.kind == "Identifier") {
+                left = {
+                    kind: "UnaryExpression",
+                    left: left,
+                    operator: operator
+                } as UnaryExpression
+            } else {
+                throw `Da ga ni`
+            }
+        }
 
         while (this.at().value == "+" || this.at().value == "-") {
             const operator = this.eat().value
