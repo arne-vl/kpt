@@ -4,6 +4,7 @@ export enum TokenType {
 
     BinaryOperator, // + - * / % ** //
     UnaryOperator, //TODO: ++ --
+    ComparisonOperator, // < > TODO <= >= == !=
     AssignmentOperator, //TODO: += -= *= /= %= **=
     EllipsisOperator, //TODO: ..
 
@@ -103,6 +104,10 @@ export function tokenize(sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Quote))
         } else if (src[0] == "\""){
             tokens.push(token(src.shift(), TokenType.DoubleQuote))
+        } else if (src[0] == "<"){
+            tokens.push(token(src.shift(), TokenType.DoubleQuote))
+        } else if (src[0] == ">"){
+            tokens.push(token(src.shift(), TokenType.ComparisonOperator))
         } else if ((src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%")){
             if (src.length > 1 &&(src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
                 const value = src.shift() == '*' ? "**" : "//";

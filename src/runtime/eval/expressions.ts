@@ -1,7 +1,7 @@
-import { AssignmentExpression, BinaryExpression, CallExpression, Identifier, MemberExpression, ObjectLiteral } from "../../frontend/ast.ts";
+import { AssignmentExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_null } from "../values.ts";
+import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_boolean, create_null } from "../values.ts";
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -40,6 +40,27 @@ export function evaluate_binary_expression(expression: BinaryExpression, environ
     }
 
     return create_null()
+}
+
+function evaluate_numeric_comparison_expression(left: NumberValue, right: NumberValue, operator: string): BooleanValue {
+    if (operator == "<") {
+        return left.value < right.value ? create_boolean(true) : create_boolean(false)
+    } else if (operator == ">") {
+        return left.value > right.value ? create_boolean(true) : create_boolean(false)
+    } 
+
+    return create_boolean(false)
+}
+
+export function evaluate_comparison_expression(expression: ComparisonExpression, environment: Environment): RuntimeValue {
+    const left = evaluate(expression.left, environment)
+    const right = evaluate(expression.right, environment)
+
+    if (left.type == "number" && right.type == "number") {
+        return evaluate_numeric_comparison_expression(left as NumberValue, right as NumberValue, expression.operator)
+    }
+
+    throw `Ik kan alleen nog ma nummers vergelijke`
 }
 
 export function evaluate_identifier(identifier: Identifier, envrionment: Environment): RuntimeValue {

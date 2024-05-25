@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { CallExpression, MemberExpression, StringLiteral } from "./ast.ts";
+import { CallExpression, ComparisonExpression, MemberExpression, StringLiteral } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -157,7 +157,7 @@ export default class Parser {
 
     private parse_object_expression(): Expression {
         if (this.at().type != TokenType.OpenBrace) {
-            return this.parse_additive_expression()
+            return this.parse_comparison_expression()
         }
 
         this.eat()
@@ -190,10 +190,28 @@ export default class Parser {
         return { kind: "ObjectLiteral", properties: properties } as ObjectLiteral
     }
 
+    private parse_comparison_expression(): Expression {
+        let left = this.parse_additive_expression()
+
+        if (this.at().value == "<" || this.at().value == ">") {
+            const operator = this.eat().value
+            const right = this.parse_additive_expression()
+
+            left = {
+                kind: "ComparisonExpression",
+                left,
+                right,
+                operator
+            } as ComparisonExpression
+        }
+
+        return left
+    }
+
     private parse_additive_expression(): Expression {
         let left = this.parse_multiplicative_expression()
 
-        while (this.at().value == "+" || this.at().value == "-" ) {
+        while (this.at().value == "+" || this.at().value == "-") {
             const operator = this.eat().value
             const right = this.parse_multiplicative_expression()
 

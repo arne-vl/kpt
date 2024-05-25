@@ -1,8 +1,8 @@
 import { NumberValue, RuntimeValue, StringValue } from "./values.ts"
-import { BinaryExpression, Identifier, NumericLiteral, StringLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration } from "../frontend/ast.ts"
+import { BinaryExpression, Identifier, NumericLiteral, StringLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration, ComparisonExpression } from "../frontend/ast.ts"
 import Environment from "./environment/environment.ts";
 import { evaluate_fuction_declaration, evaluate_program, evaluate_variable_declaration } from "./eval/statements.ts";
-import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression } from "./eval/expressions.ts"
+import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression, evaluate_comparison_expression } from "./eval/expressions.ts"
 
 export function evaluate(astNode: Statement, environment: Environment): RuntimeValue {
     switch (astNode.kind) {
@@ -32,6 +32,9 @@ export function evaluate(astNode: Statement, environment: Environment): RuntimeV
 
         case "BinaryExpression":
             return evaluate_binary_expression(astNode as BinaryExpression, environment)
+
+        case "ComparisonExpression":
+            return evaluate_comparison_expression(astNode as ComparisonExpression, environment)
 
         case "AssignmentExpression":
             return evaluate_variable_assignment(astNode as AssignmentExpression, environment)

@@ -40,3 +40,5 @@ zegt("en houdoe e")
 
 zegt(optelle)
 # commentaar ja
+
+zegt(x, y, x > y)

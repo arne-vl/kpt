@@ -36,6 +36,7 @@ deno run -A main.ts
 - `//` : Floor Division
 
 ## Functionalities
+- No need for ;
 - Functions return the last evaluated statement automatically
 - Strings can be defined using `'` and `"`
 - Place comments using `#`
