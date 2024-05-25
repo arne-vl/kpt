@@ -13,8 +13,6 @@ deno run -A main.ts
 | ----------- | ---------------------- |
 | efkes       | let                    |
 | altij       | const                  |
-| isda        | if                     |
-| veur        | for                    |
 | funkse      | function               |
 | zegt        | console.log            |
 | just        | true                   |
