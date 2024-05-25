@@ -32,6 +32,7 @@ deno run -A main.ts
 - `%` : Modulus
 - `**` : Exponentiation
 - `//` : Floor Division
+### Supported Comparison Operators
 - `<` : Less than (only numbers)
 - `>` : Greater than (only numbers)
 
