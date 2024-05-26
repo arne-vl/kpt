@@ -21,7 +21,6 @@ deno run -A main.ts file.kpt
 | efkes       | let                    |
 | altij       | const                  |
 | funkse      | function               |
-| zegt        | console.log            |
 | just        | true                   |
 | nijust      | false                  |
 | nikske      | null                   |
