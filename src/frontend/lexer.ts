@@ -6,7 +6,7 @@ export enum TokenType {
     UnaryOperator, // ++ --
     ComparisonOperator, // < > == != <= >=
     AssignmentOperator, // += -= *= /= %= **= //=
-    LogicalOperator, // TODO: ! && ||
+    LogicalOperator, // ! && ||
     EllipsisOperator, //TODO: ..
 
     Equals, // =
@@ -38,11 +38,15 @@ export enum TokenType {
 }
 
 const KEYWORDS: Record<string, TokenType> = {
-    efkes: TokenType.Let,
-    altij: TokenType.Const,
-    isda: TokenType.If,
-    veur: TokenType.For,
-    funkse: TokenType.Function,
+    "efkes": TokenType.Let,
+    "altij": TokenType.Const,
+    "isda": TokenType.If,
+    "veur": TokenType.For,
+    "funkse": TokenType.Function,
+
+    "en": TokenType.LogicalOperator,
+    "of": TokenType.LogicalOperator,
+    "ni": TokenType.LogicalOperator
 }
 
 export interface Token {

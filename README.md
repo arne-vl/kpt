@@ -54,6 +54,10 @@ deno run -A main.ts file.kpt
 - `%=` : Modulo assignment
 - `**=` : Exponential assignment
 - `//=` : Floor division assignment
+### Supported Logical Operators
+- `en` : Logical AND
+- `of` : Logical OR
+- `ni` : Logical NOT
 
 ## Functionalities
 - No need for `;` (but should be possible)

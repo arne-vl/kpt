@@ -1,4 +1,4 @@
-import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression } from "../../frontend/ast.ts";
+import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_boolean, create_null } from "../values.ts";
@@ -106,6 +106,28 @@ export function evaluate_assignment_operator_expression(expression: AssignmentOp
     }
     
     return create_null()
+}
+
+export function evaluate_logical_expression(expression: LogicalExpression, environment: Environment): RuntimeValue {
+    const right = evaluate(expression.right, environment)
+    if (right.type != "boolean") {
+        throw `logische poorte ga alleen me just en nijust`
+    }
+    if (expression.left) {
+        const left = evaluate(expression.left, environment)
+        if (left.type != "boolean") {
+            throw `logische poorte ga alleen me just en nijust`
+        }
+        if (expression.operator == "en") {
+            return (left as BooleanValue).value && (right as BooleanValue).value ? create_boolean(true) : create_boolean(false)
+        } else if (expression.operator == "of") {
+            return (left as BooleanValue).value || (right as BooleanValue).value ? create_boolean(true) : create_boolean(false)
+        }
+    } else if (expression.operator == "!") {
+        return create_boolean(!(right as BooleanValue).value)
+    }
+
+    return create_boolean()
 }
 
 function evaluate_numeric_comparison_expression(left: NumberValue, right: NumberValue, operator: string): BooleanValue {

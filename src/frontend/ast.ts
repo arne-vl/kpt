@@ -10,6 +10,7 @@ export type NodeType =
     | "BinaryExpression"
     | "UnaryExpression"
     | "AssignmentOperatorExpression"
+    | "LogicalExpression"
     | "ComparisonExpression"
     | "MemberExpression"
     | "CallExpression"
@@ -74,6 +75,13 @@ export interface UnaryExpression extends Expression {
 export interface AssignmentOperatorExpression extends Expression {
     kind: "AssignmentOperatorExpression"
     left: Expression
+    right: Expression
+    operator: string
+}
+
+export interface LogicalExpression extends Expression {
+    kind: "LogicalExpression"
+    left?: Expression
     right: Expression
     operator: string
 }

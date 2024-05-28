@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression } from "./ast.ts";
+import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression, LogicalExpression } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -220,7 +220,7 @@ export default class Parser {
     }
 
     private parse_comparison_expression(): Expression {
-        let left = this.parse_additive_expression()
+        let left = this.parse_logical_expression()
 
         if (
             this.at().value == "<" || 
@@ -239,6 +239,37 @@ export default class Parser {
                 right,
                 operator
             } as ComparisonExpression
+        }
+
+        return left
+    }
+
+    private parse_logical_expression(): Expression {
+        if (this.at().type == TokenType.LogicalOperator){
+            const operator = this.eat().value
+            const right = this.parse_additive_expression()
+
+            // logical expression
+            return {
+                kind: "LogicalExpression",
+                right: right,
+                operator:operator
+            } as LogicalExpression
+        }
+
+        const left = this.parse_additive_expression()
+
+        if (this.at().type == TokenType.LogicalOperator){
+            const operator = this.eat().value
+            const right = this.parse_additive_expression()
+            
+            // logical expression
+            return {
+                kind: "LogicalExpression",
+                left: left,
+                right: right,
+                operator: operator
+            } as LogicalExpression
         }
 
         return left
