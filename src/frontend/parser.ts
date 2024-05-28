@@ -437,38 +437,8 @@ export default class Parser {
                 return value
             }
 
-            case TokenType.DoubleQuote: {
-                this.eat()
-
-                let value = ""
-
-                while (this.at().type != TokenType.DoubleQuote && this.not_eof()) {
-                    if (value == "") {
-                        value = this.eat().value
-                    } else {
-                        value = value + " " + this.eat().value
-                    }
-                }
-
-                this.expect(TokenType.DoubleQuote, "Ne zin moete afsluite")
-
-                return { kind: "StringLiteral", value: value } as StringLiteral
-            }
-
-            case TokenType.Quote: {
-                this.eat()
-
-                let value = ""
-
-                while (this.at().type != TokenType.Quote && this.not_eof()) {
-                    if (value == "") {
-                        value = this.eat().value
-                    } else {
-                        value = value + " " + this.eat().value
-                    }
-                }
-
-                this.expect(TokenType.Quote, "Ne zin moete afsluite")
+            case TokenType.String: {
+                const value = this.eat().value
 
                 return { kind: "StringLiteral", value: value } as StringLiteral
             }

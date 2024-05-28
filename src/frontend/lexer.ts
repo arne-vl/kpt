@@ -1,6 +1,7 @@
 export enum TokenType {
     Number,
     Identifier,
+    String,
 
     BinaryOperator, // + - * / % ** //
     UnaryOperator, // ++ --
@@ -11,9 +12,6 @@ export enum TokenType {
 
     Equals, // =
     Semicolon, // ;
-
-    Quote, // '
-    DoubleQuote, // "
 
     OpenParen, // (
     CloseParen, // )
@@ -119,9 +117,21 @@ export function tokenize(sourceCode: string): Token[] {
                 tokens.push(token(src.shift(), TokenType.Dot))
             )
         } else if (src[0] == "\'"){
-            tokens.push(token(src.shift(), TokenType.Quote))
+            src.shift()
+            let str = ""
+            while (src.length > 0 && src[0] != "\'") {
+                str += src.shift()
+            }
+            if (src.length > 0) src.shift()
+            tokens.push(token(str, TokenType.String))
         } else if (src[0] == "\""){
-            tokens.push(token(src.shift(), TokenType.DoubleQuote))
+            src.shift()
+            let str = ""
+            while (src.length > 0 && src[0] != "\"") {
+                str += src.shift()
+            }
+            if (src.length > 0) src.shift()
+            tokens.push(token(str, TokenType.String))
         } else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%"){
             if (src.length > 1 && (src[0] == '+' || src[0] == '-') && src[1] == src[0]) {
                 const value = src.shift() == '+' ? "++" : "--"

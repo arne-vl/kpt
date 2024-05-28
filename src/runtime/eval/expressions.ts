@@ -1,7 +1,7 @@
 import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_boolean, create_null } from "../values.ts";
+import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null } from "../values.ts";
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -37,12 +37,18 @@ function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValu
     return { type: "number", value: result }
 }
 
+function evaluate_string_concat(left: StringValue, right: StringValue): StringValue {
+    return { type: "string", value: left.value + right.value }
+}
+
 export function evaluate_binary_expression(expression: BinaryExpression, environment: Environment): RuntimeValue {
     const left = evaluate(expression.left, environment)
     const right = evaluate(expression.right, environment)
 
     if(left.type == "number" && right.type == "number") {
         return evaluate_numeric_binary_expression(left as NumberValue, right as NumberValue, expression.operator)
+    } else if ((left.type == "string" || right.type == "string") && expression.operator == "+") {
+        return evaluate_string_concat(left as StringValue, right as StringValue)
     }
 
     return create_null()
@@ -103,6 +109,14 @@ export function evaluate_assignment_operator_expression(expression: AssignmentOp
         }
 
         return environment.assign_variable(name, { type: "number", value: value } as NumberValue)
+    } else if ((left.type == "string" || right.type == "string") && expression.operator == "+=") {
+        const name = (expression.left as Identifier).symbol
+        const left_string = left as StringValue
+        const right_string = right as StringValue
+
+        const value = left_string.value + right_string.value
+
+        return environment.assign_variable(name, { type: "string", value: value } as StringValue)
     }
     
     return create_null()
