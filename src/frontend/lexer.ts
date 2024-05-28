@@ -4,7 +4,7 @@ export enum TokenType {
 
     BinaryOperator, // + - * / % ** //
     UnaryOperator, // ++ --
-    ComparisonOperator, // < > == TODO <= >= !=
+    ComparisonOperator, // < > == != <= >=
     AssignmentOperator, //TODO: += -= *= /= %= **=
     EllipsisOperator, //TODO: ..
 
@@ -102,10 +102,6 @@ export function tokenize(sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.Quote))
         } else if (src[0] == "\""){
             tokens.push(token(src.shift(), TokenType.DoubleQuote))
-        } else if (src[0] == "<"){
-            tokens.push(token(src.shift(), TokenType.DoubleQuote))
-        } else if (src[0] == ">"){
-            tokens.push(token(src.shift(), TokenType.ComparisonOperator))
         } else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%"){
             if (src.length > 1 && (src[0] == '+' || src[0] == '-') && src[1] == src[0]) {
                 const value = src.shift() == '+' ? "++" : "--"
@@ -127,6 +123,33 @@ export function tokenize(sourceCode: string): Token[] {
             } else {
                 const value = src.shift()
                 tokens.push(token(value, TokenType.Equals))
+            }
+        } else if (src[0] == "!") {
+            if (src.length > 1 && src[1] == "="){
+                const value = "!="
+                tokens.push(token(value, TokenType.ComparisonOperator))
+                src.shift()
+                src.shift()
+            }
+        } else if (src[0] == "<") {
+            if (src.length > 1 && src[1] == "="){
+                const value = "<="
+                tokens.push(token(value, TokenType.ComparisonOperator))
+                src.shift()
+                src.shift()
+            } else {
+                const value = src.shift()
+                tokens.push(token(value, TokenType.ComparisonOperator))
+            }
+        } else if (src[0] == ">") {
+            if (src.length > 1 && src[1] == "="){
+                const value = ">="
+                tokens.push(token(value, TokenType.ComparisonOperator))
+                src.shift()
+                src.shift()
+            } else {
+                const value = src.shift()
+                tokens.push(token(value, TokenType.ComparisonOperator))
             }
         } else {
             // Handle multi-character tokens

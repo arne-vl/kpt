@@ -64,6 +64,12 @@ function evaluate_numeric_comparison_expression(left: NumberValue, right: Number
         return left.value > right.value ? create_boolean(true) : create_boolean(false)
     } else if (operator == "==") {
         return create_boolean(left.value == right.value)
+    } else if (operator == "!=") {
+        return create_boolean(left.value != right.value)
+    } else if (operator == "<=") {
+        return left.value <= right.value ? create_boolean(true) : create_boolean(false)
+    }  else if (operator == ">=") {
+        return left.value >= right.value ? create_boolean(true) : create_boolean(false)
     }
 
     return create_boolean(false)
