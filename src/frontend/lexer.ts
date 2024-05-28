@@ -102,7 +102,22 @@ export function tokenize(sourceCode: string): Token[] {
         } else if (src[0] == ","){
             tokens.push(token(src.shift(), TokenType.Comma))
         } else if (src[0] == "."){
-            tokens.push(token(src.shift(), TokenType.Dot))
+            if (src.length > 1 && is_int(src[1])){
+                let num = ""
+                num += src.shift()
+                if(is_int(src[0])) {
+                    while (src.length > 0 && is_int(src[0]) || src[0] == ".") {
+                        if (src[0] == "."){
+                            throw `Ge kunt gen 2 punte in ne nummer steke`
+                        }
+                        num += src.shift()
+                    }
+    
+                    tokens.push(token(num, TokenType.Number))
+                }
+            } else (
+                tokens.push(token(src.shift(), TokenType.Dot))
+            )
         } else if (src[0] == "\'"){
             tokens.push(token(src.shift(), TokenType.Quote))
         } else if (src[0] == "\""){
@@ -170,7 +185,16 @@ export function tokenize(sourceCode: string): Token[] {
             
             if(is_int(src[0])) {
                 let num = ""
-                while (src.length > 0 && is_int(src[0])) {
+                let decimal = false
+                while (src.length > 0 && is_int(src[0]) || src[0] == ".") {
+                    if (src[0] == "." && decimal == false){
+                        num += src.shift()
+                        decimal = true
+                    } else if (decimal == true) {
+                        if (src[0] == ".") {
+                            throw `Ge kunt gen 2 punte in ne nummer steke`
+                        }
+                    }
                     num += src.shift()
                 }
 
