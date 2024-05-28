@@ -38,7 +38,7 @@ deno run -A main.ts file.kpt
 - `/` : Division
 - `%` : Modulus
 - `**` : Exponentiation
-- `//` : Floor Division
+- `//` : Floor division
 ### Supported Comparison Operators
 - `<` : Less than (only numbers)
 - `>` : Greater than (only numbers)
@@ -46,6 +46,14 @@ deno run -A main.ts file.kpt
 - `>=` : Greater than equals (only numbers)
 - `==` : Equal to
 - `!=` : Not equal to
+### Supported Assignment Operators
+- `+=` : Addition assignment
+- `-=` : Subtraction assignment
+- `*=` : Multiplication assignment
+- `/=` : Division assignment
+- `%=` : Modulo assignment
+- `**=` : Exponential assignment
+- `//=` : Floor division assignment
 
 ## Functionalities
 - No need for `;` (but should be possible)

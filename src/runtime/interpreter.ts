@@ -1,8 +1,8 @@
 import { NumberValue, RuntimeValue, StringValue } from "./values.ts"
-import { BinaryExpression, Identifier, NumericLiteral, StringLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration, ComparisonExpression, UnaryExpression } from "../frontend/ast.ts"
+import { BinaryExpression, Identifier, NumericLiteral, StringLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration, ComparisonExpression, UnaryExpression, AssignmentOperatorExpression } from "../frontend/ast.ts"
 import Environment from "./environment/environment.ts";
 import { evaluate_fuction_declaration, evaluate_if_statement, evaluate_program, evaluate_variable_declaration } from "./eval/statements.ts";
-import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression, evaluate_comparison_expression, evaluate_unary_expression } from "./eval/expressions.ts"
+import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression, evaluate_comparison_expression, evaluate_unary_expression, evaluate_assignment_operator_expression } from "./eval/expressions.ts"
 import { IfStatement } from "../frontend/ast.ts";
 
 export function evaluate(astNode: Statement, environment: Environment): RuntimeValue {
@@ -35,7 +35,10 @@ export function evaluate(astNode: Statement, environment: Environment): RuntimeV
             return evaluate_binary_expression(astNode as BinaryExpression, environment)
         
         case "UnaryExpression":
-            return evaluate_unary_expression(astNode as UnaryExpression, environment)  
+            return evaluate_unary_expression(astNode as UnaryExpression, environment)
+
+        case "AssignmentOperatorExpression":
+            return evaluate_assignment_operator_expression(astNode as AssignmentOperatorExpression, environment)
 
         case "ComparisonExpression":
             return evaluate_comparison_expression(astNode as ComparisonExpression, environment)

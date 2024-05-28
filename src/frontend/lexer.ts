@@ -5,7 +5,8 @@ export enum TokenType {
     BinaryOperator, // + - * / % ** //
     UnaryOperator, // ++ --
     ComparisonOperator, // < > == != <= >=
-    AssignmentOperator, //TODO: += -= *= /= %= **=
+    AssignmentOperator, // += -= *= /= %= **= //=
+    LogicalOperator, // TODO: ! && ||
     EllipsisOperator, //TODO: ..
 
     Equals, // =
@@ -107,9 +108,18 @@ export function tokenize(sourceCode: string): Token[] {
                 const value = src.shift() == '+' ? "++" : "--"
                 tokens.push(token(value, TokenType.UnaryOperator))
                 src.shift()
-            } else if (src.length > 1 &&(src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
+            } else if (src.length > 2 && (src[0] == '*' || src[0] == '/') && src[1] == src[0] && src [2] == "=") {
+                const value = src.shift() == '*' ? "**=" : "//="
+                tokens.push(token(value, TokenType.AssignmentOperator))
+                src.shift()
+                src.shift()
+            } else if (src.length > 1 && (src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
                 const value = src.shift() == '*' ? "**" : "//"
                 tokens.push(token(value, TokenType.BinaryOperator))
+                src.shift()
+            } else if (src.length > 1 && src[1] == "=") {
+                const value = src.shift() + "="
+                tokens.push(token(value, TokenType.AssignmentOperator))
                 src.shift()
             } else {
                 tokens.push(token(src.shift(), TokenType.BinaryOperator))

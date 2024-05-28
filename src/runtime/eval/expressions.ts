@@ -1,4 +1,4 @@
-import { AssignmentExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression } from "../../frontend/ast.ts";
+import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_boolean, create_null } from "../values.ts";
@@ -23,6 +23,12 @@ function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValu
 
         result = left.value / right.value
     } else if (operator == "//") {
+
+        if (right.value == 0) {
+            console.error("Ej ge kunt toch ni dele door 0 zeker")
+            Deno.exit(1)
+        }
+
         result = Math.floor(left.value / right.value)
     } else {
         result = left.value % right.value
@@ -52,6 +58,51 @@ export function evaluate_unary_expression(expression: UnaryExpression, environme
         number.value = expression.operator == "++" ? number.value + 1 : number.value - 1
 
         return environment.assign_variable(name, number)
+    }
+    
+    return create_null()
+}
+
+export function evaluate_assignment_operator_expression(expression: AssignmentOperatorExpression, environment: Environment): RuntimeValue {
+    const left = evaluate(expression.left, environment)
+    const right = evaluate(expression.right, environment)
+    const operator = expression.operator
+
+    if(left.type == "number" && right.type == "number") {
+        const name = (expression.left as Identifier).symbol
+        const left_number = left as NumberValue
+        const right_number = right as NumberValue
+        let value = 0
+
+        if (operator == "+=") {
+            value = left_number.value + right_number.value
+        } else if (operator == "-=") {
+            value = left_number.value - right_number.value
+        } else if (operator == "*=") {
+            value = left_number.value * right_number.value
+        } else if (operator == "**=") {
+            value = left_number.value ** right_number.value
+        } else if (operator == "/=") {
+            
+            if (right_number.value == 0) {
+                console.error("Ej ge kunt toch ni dele door 0 zeker")
+                Deno.exit(1)
+            }
+    
+            value = left_number.value / right_number.value
+        } else if (operator == "//=") {
+    
+            if (right_number.value == 0) {
+                console.error("Ej ge kunt toch ni dele door 0 zeker")
+                Deno.exit(1)
+            }
+            
+            value = Math.floor(left_number.value / right_number.value)
+        } else {
+            value = left_number.value % right_number.value
+        }
+
+        return environment.assign_variable(name, { type: "number", value: value } as NumberValue)
     }
     
     return create_null()

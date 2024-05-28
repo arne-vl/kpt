@@ -1,5 +1,5 @@
 // deno-lint-ignore-file no-explicit-any
-import { CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression } from "./ast.ts";
+import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -256,6 +256,22 @@ export default class Parser {
                     left: left,
                     operator: operator
                 } as UnaryExpression
+            } else {
+                throw `Da ga ni`
+            }
+        }
+
+        if (this.at().type == TokenType.AssignmentOperator) {
+            const operator = this.eat().value
+
+            if (left.kind == "Identifier") {
+                const right = this.parse_expression() 
+                left = {
+                    kind: "AssignmentOperatorExpression",
+                    left: left,
+                    right: right,
+                    operator: operator
+                } as AssignmentOperatorExpression
             } else {
                 throw `Da ga ni`
             }
