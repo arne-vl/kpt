@@ -1,4 +1,4 @@
-import { AssignmentExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, VariableDeclaration } from "../../frontend/ast.ts";
+import { AssignmentExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, create_boolean, create_null } from "../values.ts";
@@ -62,7 +62,9 @@ function evaluate_numeric_comparison_expression(left: NumberValue, right: Number
         return left.value < right.value ? create_boolean(true) : create_boolean(false)
     } else if (operator == ">") {
         return left.value > right.value ? create_boolean(true) : create_boolean(false)
-    } 
+    } else if (operator == "==") {
+        return create_boolean(left.value == right.value)
+    }
 
     return create_boolean(false)
 }
@@ -74,6 +76,8 @@ export function evaluate_comparison_expression(expression: ComparisonExpression,
     if (left.type == "number" && right.type == "number") {
         return evaluate_numeric_comparison_expression(left as NumberValue, right as NumberValue, expression.operator)
     }
+
+    // TODO implement string & object comparisons
 
     throw `Ik kan alleen nog ma nummers vergelijke`
 }

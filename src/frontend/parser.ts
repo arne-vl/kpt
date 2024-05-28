@@ -222,7 +222,7 @@ export default class Parser {
     private parse_comparison_expression(): Expression {
         let left = this.parse_additive_expression()
 
-        if (this.at().value == "<" || this.at().value == ">") {
+        if (this.at().value == "<" || this.at().value == ">" || this.at().value == "==") {
             const operator = this.eat().value
             const right = this.parse_additive_expression()
 
