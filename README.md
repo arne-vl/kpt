@@ -42,6 +42,10 @@ deno run -A main.ts file.kpt
 ### Supported Comparison Operators
 - `<` : Less than (only numbers)
 - `>` : Greater than (only numbers)
+- `<=` : Less than equals (only numbers)
+- `>=` : Greater than equals (only numbers)
+- `==` : Equal to
+- `!=` : Not equal to
 
 ## Functionalities
 - No need for `;` (but should be possible)
