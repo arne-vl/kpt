@@ -34,7 +34,7 @@ export function evaluate_fuction_declaration(declaration: FunctionDeclaration, e
 export function evaluate_if_statement(statement: IfStatement, environment: Environment): RuntimeValue {
     const execute = evaluate(statement.statement, environment)
 
-    if (execute.type != "boolean") {
+    if (execute.type != "boolean" && !statement.else) {
         throw `Isda ga alleen as het just of nijust is`
     }
 
@@ -43,6 +43,12 @@ export function evaluate_if_statement(statement: IfStatement, environment: Envir
     if ((execute as BooleanValue).value == true) {
         for (const s of statement.body) {
             result = evaluate(s, environment)
+        }
+    } else {
+        if (statement.else) {
+            for (const s of statement.else) {
+                result = evaluate(s, environment)
+            }
         }
     }
 

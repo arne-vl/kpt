@@ -140,13 +140,30 @@ export default class Parser {
 
         this.expect(TokenType.CloseBrace, "Ge moe ok wel } doen")
 
-        if (this.at().type == TokenType.Semicolon) this.eat()
-
-        return {
+        const ifstatement = {
             kind: "IfStatement",
             statement: statement,
             body: body
         } as IfStatement
+
+        if (this.at().type == TokenType.Else) {
+            this.eat()
+            this.expect(TokenType.OpenBrace, "Ge moe { gebruike voor aans")
+
+            const body: Statement[] = []
+            
+            while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
+                body.push(this.parse_statement())
+            }
+
+            this.expect(TokenType.CloseBrace, "Ge moe ok wel } doen")
+
+            ifstatement.else = body
+        }
+
+        if (this.at().type == TokenType.Semicolon) this.eat()
+
+        return ifstatement
     }
 
     private parse_statement(): Statement {

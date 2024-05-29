@@ -5,13 +5,9 @@ funkse even (getal) {
 
     isda (rest == 0) {
         resultaat = just
-    }
-
-    isda (rest == 1) {
+    } aans {
         resultaat = nijust
     }
-
-    resultaat
 }
 
 zegt(even(4))

@@ -49,6 +49,7 @@ export interface IfStatement extends Statement {
     kind: "IfStatement"
     statement: Statement
     body: Statement[]
+    else?: Statement[]
 }
 
 export interface Expression extends Statement {}

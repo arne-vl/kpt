@@ -28,6 +28,7 @@ deno run -A main.ts file.kpt
 | waduurist() | new Date(Date.now())   |
 | funkse      | function               |
 | isda        | if                     |
+| aans        | else                   |
 
 ## Supported Operators
 - `+` : Addition
