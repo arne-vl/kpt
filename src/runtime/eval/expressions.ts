@@ -1,7 +1,7 @@
-import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression } from "../../frontend/ast.ts";
+import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression, NumericLiteral, StringLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null } from "../values.ts";
+import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null, create_number, create_string } from "../values.ts";
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -181,13 +181,47 @@ export function evaluate_identifier(identifier: Identifier, envrionment: Environ
 }
 
 export function evaluate_variable_assignment(expression: AssignmentExpression, environment: Environment): RuntimeValue {
-    if (expression.assignee.kind != "Identifier") {
+    if (expression.assignee.kind != "Identifier" && expression.assignee.kind != "MemberExpression") {
         throw `Ge kunt die waarde ni wijzige: ${JSON.stringify(expression.assignee)}`
     }
 
-    const varname = (expression.assignee as Identifier).symbol
+    if (expression.assignee.kind == "Identifier") {
+        const varname = (expression.assignee as Identifier).symbol
 
-    return environment.assign_variable(varname, evaluate(expression.value, environment))
+        return environment.assign_variable(varname, evaluate(expression.value, environment))
+    } else {
+        const object = evaluate((expression.assignee as MemberExpression).object, environment)
+        const property = ((expression.assignee as MemberExpression).property) as Identifier
+
+        if (object.type == "object") {
+            let value = null
+            switch (expression.value.kind) {
+                case "NumericLiteral":
+                    value = create_number((expression.value as NumericLiteral).value)
+                    break
+                case "StringLiteral":
+                    value = create_string((expression.value as StringLiteral).value)
+                    break
+                case "Identifier": 
+                    value = evaluate(expression.value, environment)
+                    break
+                case "MemberExpression": {
+                    value = evaluate_member_expression((expression.value as MemberExpression), environment)
+                    break
+                }
+                case "ObjectLiteral":
+                    value = evaluate((expression.value as ObjectLiteral), environment)
+                    break
+            }
+
+            if (value == null) {
+                value = create_null()
+            }
+            (object as ObjectValue).properties.set(property.symbol, value)
+        }
+
+        return create_null()
+    }
 }
 
 export function evaluate_object_expression(object: ObjectLiteral, environment: Environment): RuntimeValue {
