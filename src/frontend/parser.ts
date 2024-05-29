@@ -148,16 +148,19 @@ export default class Parser {
 
         if (this.at().type == TokenType.Else) {
             this.eat()
-            this.expect(TokenType.OpenBrace, "Ge moe { gebruike voor aans")
-
             const body: Statement[] = []
+
+            if (this.at().type == TokenType.If) {
+                body.push(this.parse_if_statement())
+            } else {
+                this.expect(TokenType.OpenBrace, "Ge moe { gebruike voor aans")
             
-            while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
-                body.push(this.parse_statement())
+                while (this.not_eof() && this.at().type != TokenType.CloseBrace) {
+                    body.push(this.parse_statement())
+                }
+
+                this.expect(TokenType.CloseBrace, "Ge moe ok wel } doen")
             }
-
-            this.expect(TokenType.CloseBrace, "Ge moe ok wel } doen")
-
             ifstatement.else = body
         }
 

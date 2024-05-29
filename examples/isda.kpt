@@ -12,3 +12,21 @@ isda (x > y) {
 isda (x < y) {
     zegt("das ni just")
 }
+
+# aans isda == else if
+funkse test (getal) {
+    isda (getal == 1) {
+        zegt("jen")
+    } aans isda (getal == 2) {
+        zegt("twjee")
+    } aans isda (getal == 3) {
+        zegt("drei")
+    } aans {
+        zegt("trekt uwe plan")
+    }
+}
+
+test(1)
+test(2)
+test(3)
+test(10)

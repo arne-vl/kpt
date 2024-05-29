@@ -1,12 +1,10 @@
 funkse even (getal) {
     altij rest = getal % 2
 
-    efkes resultaat
-
     isda (rest == 0) {
-        resultaat = just
+        just
     } aans {
-        resultaat = nijust
+        nijust
     }
 }
 
