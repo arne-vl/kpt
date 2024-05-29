@@ -1,0 +1,18 @@
+funkse even (getal) {
+    altij rest = getal % 2
+
+    efkes resultaat
+
+    isda (rest == 0) {
+        resultaat = just
+    }
+
+    isda (rest == 1) {
+        resultaat = nijust
+    }
+
+    resultaat
+}
+
+zegt(even(4))
+zegt(even(1836729))

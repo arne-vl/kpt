@@ -17,3 +17,7 @@ altij z = {
 zegt(z)
 zegt()
 zegt(z.b.nee)
+
+z.b.nee = "jawel"
+zegt()
+zegt(z)
