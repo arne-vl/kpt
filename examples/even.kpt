@@ -1,7 +1,7 @@
 funkse even (getal) {
     altij rest = getal % 2
 
-    isda (rest == 0) {
+    as (rest == 0) {
         just
     } aans {
         nijust

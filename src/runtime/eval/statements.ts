@@ -35,7 +35,7 @@ export function evaluate_if_statement(statement: IfStatement, environment: Envir
     const execute = evaluate(statement.statement, environment)
 
     if (execute.type != "boolean" && !statement.else) {
-        throw `Isda ga alleen as het just of nijust is`
+        throw `As ga alleen as het just of nijust is`
     }
 
     let result: RuntimeValue = create_null()

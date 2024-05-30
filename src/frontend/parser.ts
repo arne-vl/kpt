@@ -130,7 +130,7 @@ export default class Parser {
 
         const statement = this.parse_statement()
 
-        this.expect(TokenType.OpenBrace, "Ge moe { gebruike voor isda")
+        this.expect(TokenType.OpenBrace, "Ge moe { gebruike voor as")
 
         const body: Statement[] = []
         

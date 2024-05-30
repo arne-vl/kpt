@@ -1,25 +1,25 @@
 altij x = 10
 altij y = 5
 
-isda (just) {
+as (just) {
     zegt("das altij just")
 }
 
-isda (x > y) {
+as (x > y) {
     zegt("das ok just")
 }
 
-isda (x < y) {
+as (x < y) {
     zegt("das ni just")
 }
 
-# aans isda == else if
+# aans as == else if
 funkse test (getal) {
-    isda (getal == 1) {
+    as (getal == 1) {
         zegt("jen")
-    } aans isda (getal == 2) {
+    } aans as (getal == 2) {
         zegt("twjee")
-    } aans isda (getal == 3) {
+    } aans as (getal == 3) {
         zegt("drei")
     } aans {
         zegt("trekt uwe plan")
