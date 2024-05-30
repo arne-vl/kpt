@@ -294,7 +294,11 @@ export function evaluate_member_expression(expression: MemberExpression, environ
             return object.properties.get(keys[property.value]) as NumberValue
         }
 
-        throw `Dieje key kan ni: ${expression}`
+        if (property.kind == "Identifier") {
+            throw `Dieje key kan ni: \"${property.symbol}\"`
+        } else {
+            throw `Dieje key kan ni: \"${property.value}\"`
+        }
         
     } else {
         throw `Ik kan er ni aan uit ${expression}`
