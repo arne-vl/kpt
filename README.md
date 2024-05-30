@@ -27,7 +27,7 @@ deno run -A main.ts file.kpt
 | zegt()      | console.log()          |
 | waduurist() | new Date(Date.now())   |
 | funkse      | function               |
-| as        | if                     |
+| as          | if                     |
 | aans        | else                   |
 
 ## Supported Operators

@@ -270,7 +270,8 @@ export function evaluate_call_expression(expression: CallExpression, environment
 }
 
 export function evaluate_member_expression(expression: MemberExpression, environment: Environment): RuntimeValue {
-    const object = evaluate(expression.object, environment) as ObjectValue
+    const identifier = evaluate_identifier(expression.object as Identifier, environment)
+
 
     let property
 
@@ -286,23 +287,45 @@ export function evaluate_member_expression(expression: MemberExpression, environ
         property = { kind: "Identifier", symbol: string.value } as Identifier
     }
 
-    if (property != undefined && object.properties != undefined) {
-        if (property.kind == "Identifier" && object.properties.has(property.symbol)) {
-            return object.properties.get(property.symbol) as NumberValue
-        } else if (property.kind == "NumericLiteral" && object.properties.size > property.value) {
-            const keys = Array.from(object.properties.keys())
-            return object.properties.get(keys[property.value]) as NumberValue
+    if (identifier.type == "object") {
+        const object = evaluate(expression.object, environment) as ObjectValue
+        if (property != undefined && object.properties != undefined) {
+            if (property.kind == "Identifier" && object.properties.has(property.symbol)) {
+                return object.properties.get(property.symbol) as NumberValue
+            } else if (property.kind == "NumericLiteral" && object.properties.size > property.value) {
+                const keys = Array.from(object.properties.keys())
+                return object.properties.get(keys[property.value]) as NumberValue
+            }
+    
+            if (property.kind == "Identifier") {
+                throw `Dieje key kan ni: \"${property.symbol}\"`
+            } else {
+                throw `Dieje key kan ni: \"${property.value}\"`
+            }
+            
         }
+    } else if (identifier.type == "array") {
+        const array = evaluate(expression.object, environment) as ArrayValue
 
-        if (property.kind == "Identifier") {
-            throw `Dieje key kan ni: \"${property.symbol}\"`
-        } else {
+        if (property != undefined) {
+            if (property.kind == "Identifier") {
+                const identifier = evaluate_identifier(property as Identifier, environment)
+                if ( identifier.type == "number") {
+                    return array.values[(identifier as NumberValue).value] as NumberValue
+                } else {
+                    throw `Dieje key besta ni: ${identifier}`
+                }
+            } else if (property.kind == "NumericLiteral" && array.values.length > property.value) {
+                return array.values[property.value] as NumberValue
+            }
+    
             throw `Dieje key kan ni: \"${property.value}\"`
         }
-        
     } else {
-        throw `Ik kan er ni aan uit ${expression}`
+        throw `Da ga alleen op objecte of arrays`
     }
+
+    throw `Ik kan er ni aan uit ${expression}`
 }
 
 export function evaluate_array_expression(expression: ArrayExpression, environment: Environment): RuntimeValue {
