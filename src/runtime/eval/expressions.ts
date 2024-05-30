@@ -1,7 +1,7 @@
-import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression, NumericLiteral, StringLiteral } from "../../frontend/ast.ts";
+import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression, NumericLiteral, StringLiteral, ArrayExpression } from "../../frontend/ast.ts";
 import Environment from "../environment/environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null, create_number, create_string } from "../values.ts";
+import { ArrayValue, BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null, create_number, create_string } from "../values.ts";
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -303,4 +303,13 @@ export function evaluate_member_expression(expression: MemberExpression, environ
     } else {
         throw `Ik kan er ni aan uit ${expression}`
     }
+}
+
+export function evaluate_array_expression(expression: ArrayExpression, environment: Environment): RuntimeValue {
+    const values: RuntimeValue[] = []
+
+    expression.values.forEach((value) => {
+        values.push(evaluate(value, environment))
+    })
+    return { type: "array", values: values } as ArrayValue
 }

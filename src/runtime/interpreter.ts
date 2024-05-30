@@ -1,8 +1,8 @@
 import { NumberValue, RuntimeValue, StringValue } from "./values.ts"
-import { BinaryExpression, Identifier, NumericLiteral, StringLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration, ComparisonExpression, UnaryExpression, AssignmentOperatorExpression, LogicalExpression } from "../frontend/ast.ts"
+import { BinaryExpression, Identifier, NumericLiteral, StringLiteral, Program, Statement, VariableDeclaration, AssignmentExpression, ObjectLiteral, CallExpression, MemberExpression, FunctionDeclaration, ComparisonExpression, UnaryExpression, AssignmentOperatorExpression, LogicalExpression, ArrayExpression } from "../frontend/ast.ts"
 import Environment from "./environment/environment.ts";
 import { evaluate_fuction_declaration, evaluate_if_statement, evaluate_program, evaluate_variable_declaration } from "./eval/statements.ts";
-import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression, evaluate_comparison_expression, evaluate_unary_expression, evaluate_assignment_operator_expression, evaluate_logical_expression } from "./eval/expressions.ts"
+import { evaluate_identifier, evaluate_binary_expression, evaluate_variable_assignment, evaluate_object_expression, evaluate_call_expression, evaluate_member_expression, evaluate_comparison_expression, evaluate_unary_expression, evaluate_assignment_operator_expression, evaluate_logical_expression, evaluate_array_expression } from "./eval/expressions.ts"
 import { IfStatement } from "../frontend/ast.ts";
 
 export function evaluate(astNode: Statement, environment: Environment): RuntimeValue {
@@ -49,6 +49,9 @@ export function evaluate(astNode: Statement, environment: Environment): RuntimeV
         case "AssignmentExpression":
             return evaluate_variable_assignment(astNode as AssignmentExpression, environment)
 
+        case "ArrayExpression":
+            return evaluate_array_expression(astNode as ArrayExpression, environment)
+            
         case "VariableDeclaration":
             return evaluate_variable_declaration(astNode as VariableDeclaration, environment)
 

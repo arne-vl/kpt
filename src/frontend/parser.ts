@@ -1,5 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression, LogicalExpression } from "./ast.ts";
+import { ArrayExpression } from "./ast.ts";
 import { 
     Statement, 
     Program, 
@@ -193,7 +194,7 @@ export default class Parser {
     }
 
     private parse_assignment_expression(): Expression {
-        const left = this.parse_object_expression()
+        const left = this.parse_array_expression()
 
         if (this.at().type == TokenType.Equals) {
             this.eat()
@@ -202,6 +203,26 @@ export default class Parser {
         }
         
         return left
+    }
+
+    private parse_array_expression(): Expression {
+        if (this.at().type != TokenType.OpenBracket) {
+            return this.parse_object_expression()
+        }
+
+        const values = this.parse_array_items()
+        
+        return { kind: "ArrayExpression", values: values } as ArrayExpression
+    }
+
+    private parse_array_items(): Expression[] {
+        this.expect(TokenType.OpenBracket, "Kmoet ier een [] hebbe")
+
+        const args = this.at().type == TokenType.CloseParen ? [] : this.parse_args_list()
+
+        this.expect(TokenType.CloseBracket, "Kmoet ier een ] hebbe")
+
+        return args
     }
 
     private parse_object_expression(): Expression {

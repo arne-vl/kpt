@@ -8,6 +8,7 @@ export type ValueType =
     | "boolean"
     | "object"
     | "dateobject"
+    | "array"
     | "internal_function"
     | "function"
 
@@ -69,6 +70,11 @@ export interface DateObject extends Object {
 
 export function create_date_object(properties: Map<string, RuntimeValue>): DateObject {
     return { type: "dateobject", properties: properties }
+}
+
+export interface ArrayValue extends Object {
+    type: "array"
+    values: Array<RuntimeValue>
 }
 
 export type FunctionCall = (args: RuntimeValue[], environment: Environment) => RuntimeValue

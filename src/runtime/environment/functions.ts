@@ -1,4 +1,4 @@
-import { DateObject, FunctionValue, NumberValue, ObjectValue, StringValue, create_date_object, create_number } from "../values.ts";
+import { DateObject, FunctionValue, NumberValue, ObjectValue, StringValue, create_date_object, create_number, ArrayValue } from "../values.ts";
 import { BooleanValue } from "../values.ts";
 import { create_internal_function, create_null, RuntimeValue } from "../values.ts";
 import Environment from "./environment.ts";
@@ -30,20 +30,32 @@ function print_function(_args: RuntimeValue[], _environment: Environment) {
         return
     }
 
-    const output = _args.map(arg => pretty_print(arg, 0)).join(' ');
+    const output = _args.map(arg => pretty_print(arg)).join(' ');
     console.log(output)
 }
 
-function pretty_print(value: RuntimeValue, indent_level: number): string {
-    const indent = '  '.repeat(indent_level);
+function pretty_print(value: RuntimeValue, quotes: boolean = false): string {
     switch (value.type) {
-        case "object": {
-            const entries = Array.from((value as ObjectValue).properties.entries());
-            const formatted_properties = entries.map(([key, val]) => {
-                const nested_indent = '  '.repeat(indent_level + 1)
-                return `${nested_indent}${key}: ${pretty_print(val, indent_level + 1)}`
+        case "array": {
+            const entries = (value as ArrayValue).values
+            let str = "["
+
+            entries.forEach((entry, idx) => {
+                str += pretty_print(entry, true)
+
+                if (idx != entries.length - 1) str += ", "
             });
-            return `{${formatted_properties.length > 0 ? '\n' + formatted_properties.join(",\n") + '\n' + indent : ''}}`
+
+            str += "]"
+
+            return str
+        }
+        case "object": {
+            const entries = Array.from((value as ObjectValue).properties.entries())
+            const formatted_properties = entries.map(([key, val]) => {
+                return `'${key}': ${pretty_print(val, true)}`
+            });
+            return `{${formatted_properties.join(", ")}}`
         }
         case "dateobject": {
             const date = value as DateObject;
@@ -62,7 +74,11 @@ function pretty_print(value: RuntimeValue, indent_level: number): string {
         case "number":
             return (value as NumberValue).value.toString()
         case "string":
-            return (value as StringValue).value
+            if (quotes) {
+                return "'" + (value as StringValue).value + "'"
+            } else {
+                return (value as StringValue).value
+            }
         case "function":
             return `<${(value as FunctionValue).name}: funkse>`
         case "internal_function":
