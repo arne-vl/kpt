@@ -14,6 +14,9 @@ altij z = {
     }
 }
 
+zegt(z[0])
+zegt(z["y"])
+
 zegt(z)
 zegt()
 zegt(z.b.nee)

@@ -212,11 +212,10 @@ export function evaluate_variable_assignment(expression: AssignmentExpression, e
                 case "ObjectLiteral":
                     value = evaluate((expression.value as ObjectLiteral), environment)
                     break
+                default:
+                    value = create_null()
             }
 
-            if (value == null) {
-                value = create_null()
-            }
             (object as ObjectValue).properties.set(property.symbol, value)
         }
 
@@ -272,11 +271,32 @@ export function evaluate_call_expression(expression: CallExpression, environment
 
 export function evaluate_member_expression(expression: MemberExpression, environment: Environment): RuntimeValue {
     const object = evaluate(expression.object, environment) as ObjectValue
-    const property = expression.property as Identifier
 
-    if (object.properties != undefined && object.properties.has(property.symbol)) {
-        return object.properties.get(property.symbol) as NumberValue
+    let property
+
+    if (expression.property.kind == "Identifier" && expression.computed == false) {
+        property = expression.property as Identifier
+    } else if (expression.property.kind == "Identifier" && expression.computed == true) {
+        const number = evaluate(expression.property, environment) as NumberValue
+        property = { kind: "NumericLiteral", value: number.value } as NumericLiteral
+    } else if (expression.property.kind == "NumericLiteral" && expression.computed == true) {
+        property = expression.property as NumericLiteral
+    } else if (expression.property.kind == "StringLiteral" && expression.computed == true) {
+        const string = expression.property as StringLiteral
+        property = { kind: "Identifier", symbol: string.value } as Identifier
+    }
+
+    if (property != undefined && object.properties != undefined) {
+        if (property.kind == "Identifier" && object.properties.has(property.symbol)) {
+            return object.properties.get(property.symbol) as NumberValue
+        } else if (property.kind == "NumericLiteral" && object.properties.size > property.value) {
+            const keys = Array.from(object.properties.keys())
+            return object.properties.get(keys[property.value]) as NumberValue
+        }
+
+        throw `Dieje key kan ni: ${expression}`
+        
     } else {
-        throw `Da besta ni manneke: ${property.symbol}`
+        throw `Ik kan er ni aan uit ${expression}`
     }
 }
