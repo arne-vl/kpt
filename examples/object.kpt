@@ -8,7 +8,7 @@ altij z = {
     a: c,
     b: {
         ja: just,
-        nee: 'hallo'
+        nee: "hallo"
     }
 }
 
@@ -20,5 +20,4 @@ zegt()
 zegt(z.b.nee)
 
 z.b.nee = "jawel"
-zegt()
 zegt(z)

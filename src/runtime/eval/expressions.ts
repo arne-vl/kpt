@@ -270,63 +270,59 @@ export function evaluate_call_expression(expression: CallExpression, environment
 }
 
 export function evaluate_member_expression(expression: MemberExpression, environment: Environment): RuntimeValue {
-    const identifier = evaluate_identifier(expression.object as Identifier, environment)
+    const object = evaluate(expression.object, environment);
 
+    let property: Identifier | NumericLiteral | StringLiteral;
 
-    let property
-
-    if (expression.property.kind == "Identifier" && expression.computed == false) {
-        property = expression.property as Identifier
-    } else if (expression.property.kind == "Identifier" && expression.computed == true) {
-        const number = evaluate(expression.property, environment) as NumberValue
-        property = { kind: "NumericLiteral", value: number.value } as NumericLiteral
-    } else if (expression.property.kind == "NumericLiteral" && expression.computed == true) {
-        property = expression.property as NumericLiteral
-    } else if (expression.property.kind == "StringLiteral" && expression.computed == true) {
-        const string = expression.property as StringLiteral
-        property = { kind: "Identifier", symbol: string.value } as Identifier
-    }
-
-    if (identifier.type == "object") {
-        const object = evaluate(expression.object, environment) as ObjectValue
-        if (property != undefined && object.properties != undefined) {
-            if (property.kind == "Identifier" && object.properties.has(property.symbol)) {
-                return object.properties.get(property.symbol) as NumberValue
-            } else if (property.kind == "NumericLiteral" && object.properties.size > property.value) {
-                const keys = Array.from(object.properties.keys())
-                return object.properties.get(keys[property.value]) as NumberValue
-            }
-    
-            if (property.kind == "Identifier") {
-                throw `Dieje key kan ni: \"${property.symbol}\"`
-            } else {
-                throw `Dieje key kan ni: \"${property.value}\"`
-            }
-            
+    if (expression.property.kind === "Identifier" && !expression.computed) {
+        property = expression.property as Identifier;
+    } else if (expression.property.kind === "Identifier" && expression.computed) {
+        const identifier = evaluate(expression.property, environment);
+        if (identifier.type === "number") {
+            property = { kind: "NumericLiteral", value: (identifier as NumberValue).value } as NumericLiteral;
+        } else if (identifier.type === "string") {
+            property = { kind: "StringLiteral", value: (identifier as StringValue).value } as StringLiteral;
+        } else {
+            throw `Ni het juste type: ${identifier.type}`;
         }
-    } else if (identifier.type == "array") {
-        const array = evaluate(expression.object, environment) as ArrayValue
-
-        if (property != undefined) {
-            if (property.kind == "Identifier") {
-                const identifier = evaluate_identifier(property as Identifier, environment)
-                if ( identifier.type == "number") {
-                    return array.values[(identifier as NumberValue).value] as NumberValue
-                } else {
-                    throw `Dieje key besta ni: ${identifier}`
-                }
-            } else if (property.kind == "NumericLiteral" && array.values.length > property.value) {
-                return array.values[property.value] as NumberValue
-            }
-    
-            throw `Dieje key kan ni: \"${property.value}\"`
-        }
+    } else if (expression.property.kind === "NumericLiteral") {
+        property = expression.property as NumericLiteral;
+    } else if (expression.property.kind === "StringLiteral") {
+        const string = expression.property as StringLiteral;
+        property = { kind: "Identifier", symbol: string.value } as Identifier;
     } else {
-        throw `Da ga alleen op objecte of arrays`
+        throw `Da wordt ni ondersteund: ${expression.property.kind}`;
     }
 
-    throw `Ik kan er ni aan uit ${expression}`
+    if (object.type === "object") {
+        const obj = object as ObjectValue;
+        if (property.kind === "Identifier" && obj.properties.has(property.symbol)) {
+            return obj.properties.get(property.symbol) as RuntimeValue;
+        } else if (property.kind === "NumericLiteral") {
+            const keys = Array.from(obj.properties.keys());
+            if (property.value < keys.length) {
+                return obj.properties.get(keys[property.value]) as RuntimeValue;
+            }
+        }
+
+        throw `Da besta ni: ${property.kind === "Identifier" ? property.symbol : property.value}`;
+    } else if (object.type === "array") {
+        const array = object as ArrayValue;
+        if (property.kind === "NumericLiteral" && property.value < array.values.length) {
+            return array.values[property.value] as RuntimeValue;
+        } else if (property.kind === "Identifier") {
+            const index = evaluate_identifier(property as Identifier, environment);
+            if (index.type === "number" && (index as NumberValue).value < array.values.length) {
+                return array.values[(index as NumberValue).value] as RuntimeValue;
+            }
+        }
+
+        throw `Diejen index kan ni: ${property.kind === "Identifier" ? property.symbol : property.value}`;
+    } else {
+        throw `Ge kunt zo alleen dinge van arrays en objecte ophale, ni van ${object.type}`;
+    }
 }
+
 
 export function evaluate_array_expression(expression: ArrayExpression, environment: Environment): RuntimeValue {
     const values: RuntimeValue[] = []
