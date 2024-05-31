@@ -1,4 +1,3 @@
-// deno-lint-ignore-file no-explicit-any
 import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression, LogicalExpression } from "./ast.ts";
 import { ArrayExpression } from "./ast.ts";
 import { 
@@ -32,7 +31,7 @@ export default class Parser {
         return prev
     }
 
-    private expect(type: TokenType, err: any) {
+    private expect(type: TokenType, err: string) {
         const prev = this.tokens.shift() as Token
 
         if(!prev || prev.type != type) {
@@ -62,7 +61,7 @@ export default class Parser {
         const constant = this.eat().type == TokenType.Const
         const identifier = this.expect(TokenType.Identifier, "Ik verwacht hier wel ne naam he").value
 
-        if (this.at().type == TokenType.Semicolon) this.eat() // let x;
+        if (this.at().type == TokenType.Semicolon) this.eat()
 
         if (this.at().type != TokenType.Equals) {
             if (constant) {
@@ -290,7 +289,6 @@ export default class Parser {
             const operator = this.eat().value
             const right = this.parse_additive_expression()
 
-            // logical expression
             return {
                 kind: "LogicalExpression",
                 right: right,
@@ -304,7 +302,6 @@ export default class Parser {
             const operator = this.eat().value
             const right = this.parse_additive_expression()
             
-            // logical expression
             return {
                 kind: "LogicalExpression",
                 left: left,

@@ -1,7 +1,7 @@
-import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression, NumericLiteral, StringLiteral, ArrayExpression } from "../../frontend/ast.ts";
-import Environment from "../environment/environment.ts";
-import { evaluate } from "../interpreter.ts";
-import { ArrayValue, BooleanValue, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null, create_number, create_string } from "../values.ts";
+import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression, NumericLiteral, StringLiteral, ArrayExpression } from "../../frontend/ast.ts"
+import Environment from "../environment/environment.ts"
+import { evaluate } from "../interpreter.ts"
+import { ArrayValue, BooleanValue, DateObject, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null, create_number, create_string } from "../values.ts"
 
 function evaluate_numeric_binary_expression(left: NumberValue, right: NumberValue, operator: string): NumberValue {
     let result = 0
@@ -270,59 +270,74 @@ export function evaluate_call_expression(expression: CallExpression, environment
 }
 
 export function evaluate_member_expression(expression: MemberExpression, environment: Environment): RuntimeValue {
-    const object = evaluate(expression.object, environment);
+    const object = evaluate(expression.object, environment)
 
-    let property: Identifier | NumericLiteral | StringLiteral;
+    let property: Identifier | NumericLiteral | StringLiteral
 
     if (expression.property.kind === "Identifier" && !expression.computed) {
-        property = expression.property as Identifier;
+        property = expression.property as Identifier
     } else if (expression.property.kind === "Identifier" && expression.computed) {
-        const identifier = evaluate(expression.property, environment);
+        const identifier = evaluate(expression.property, environment)
         if (identifier.type === "number") {
-            property = { kind: "NumericLiteral", value: (identifier as NumberValue).value } as NumericLiteral;
+            property = { kind: "NumericLiteral", value: (identifier as NumberValue).value } as NumericLiteral
         } else if (identifier.type === "string") {
-            property = { kind: "StringLiteral", value: (identifier as StringValue).value } as StringLiteral;
+            property = { kind: "StringLiteral", value: (identifier as StringValue).value } as StringLiteral
         } else {
-            throw `Ni het juste type: ${identifier.type}`;
+            throw `Ni het juste type: ${identifier.type}`
         }
     } else if (expression.property.kind === "NumericLiteral") {
-        property = expression.property as NumericLiteral;
+        property = expression.property as NumericLiteral
     } else if (expression.property.kind === "StringLiteral") {
-        const string = expression.property as StringLiteral;
-        property = { kind: "Identifier", symbol: string.value } as Identifier;
+        const string = expression.property as StringLiteral
+        property = { kind: "Identifier", symbol: string.value } as Identifier
     } else {
-        throw `Da wordt ni ondersteund: ${expression.property.kind}`;
+        throw `Da wordt ni ondersteund: ${expression.property.kind}`
     }
 
     if (object.type === "object") {
-        const obj = object as ObjectValue;
+        const obj = object as ObjectValue
         if (property.kind === "Identifier" && obj.properties.has(property.symbol)) {
-            return obj.properties.get(property.symbol) as RuntimeValue;
+            return obj.properties.get(property.symbol) as RuntimeValue
         } else if (property.kind === "NumericLiteral") {
-            const keys = Array.from(obj.properties.keys());
+            const keys = Array.from(obj.properties.keys())
             if (property.value < keys.length) {
-                return obj.properties.get(keys[property.value]) as RuntimeValue;
+                return obj.properties.get(keys[property.value]) as RuntimeValue
             }
+        } else if (property.kind === "StringLiteral" && obj.properties.has(property.value)) {
+            return obj.properties.get(property.value) as RuntimeValue
         }
 
-        throw `Da besta ni: ${property.kind === "Identifier" ? property.symbol : property.value}`;
+        throw `Da besta ni: ${property.kind === "Identifier" ? property.symbol : property.value}`
     } else if (object.type === "array") {
-        const array = object as ArrayValue;
+        const array = object as ArrayValue
         if (property.kind === "NumericLiteral" && property.value < array.values.length) {
-            return array.values[property.value] as RuntimeValue;
+            return array.values[property.value] as RuntimeValue
         } else if (property.kind === "Identifier") {
-            const index = evaluate_identifier(property as Identifier, environment);
+            const index = evaluate_identifier(property as Identifier, environment)
             if (index.type === "number" && (index as NumberValue).value < array.values.length) {
-                return array.values[(index as NumberValue).value] as RuntimeValue;
+                return array.values[(index as NumberValue).value] as RuntimeValue
+            }
+        } else if (property.kind === "StringLiteral") {
+            const index = evaluate_identifier({ kind: "Identifier", symbol: property.value } as Identifier, environment)
+            if (index.type === "number" && (index as NumberValue).value < array.values.length) {
+                return array.values[(index as NumberValue).value] as RuntimeValue
             }
         }
 
-        throw `Diejen index kan ni: ${property.kind === "Identifier" ? property.symbol : property.value}`;
+        throw `Diejen index kan ni: ${property.kind === "Identifier" ? property.symbol : property.value}`
+    } else if (object.type === "dateobject") {
+        const dateObject = object as DateObject
+        if (property.kind === "Identifier" && dateObject.properties.has(property.symbol)) {
+            return dateObject.properties.get(property.symbol) as RuntimeValue
+        } else if (property.kind === "StringLiteral" && dateObject.properties.has(property.value)) {
+            return dateObject.properties.get(property.value) as RuntimeValue
+        }
+
+        throw `Gen geldige datum eigenschap: ${property.kind === "Identifier" ? property.symbol : property.value}`
     } else {
-        throw `Ge kunt zo alleen dinge van arrays en objecte ophale, ni van ${object.type}`;
+        throw `Ge kunt zo alleen dinge van arrays en objecte ophale, ni van ${object.type}`
     }
 }
-
 
 export function evaluate_array_expression(expression: ArrayExpression, environment: Environment): RuntimeValue {
     const values: RuntimeValue[] = []

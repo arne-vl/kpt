@@ -12,6 +12,9 @@ altij z = {
     }
 }
 
+efkes t = "x"
+zegt(z[t])
+
 zegt(z[0])
 zegt(z["y"])
 

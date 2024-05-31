@@ -9,10 +9,10 @@ export enum TokenType {
     ComparisonOperator, // < > == != <= >=
     AssignmentOperator, // += -= *= /= %= **= //=
     LogicalOperator, // ! && ||
-    EllipsisOperator, //TODO: ..
+    EllipsisOperator, // TODO: ..
 
     Equals, // =
-    Semicolon, // ;
+    Semicolon, // 
 
     OpenParen, // (
     CloseParen, // )
@@ -60,14 +60,11 @@ function token(value: string = "", type: TokenType): Token {
 }
 
 function is_alpha(src: string) {
-    return src.toUpperCase() != src.toLowerCase()
+    return /^[a-zA-Z]$/.test(src)
 }
 
 function is_int(src: string) {
-    const c = src.charCodeAt(0)
-    const bounds = ["0".charCodeAt(0), "9".charCodeAt(0)]
-
-    return (c >= bounds[0] && c <= bounds[1])
+    return /^[0-9]$/.test(src)
 }
 
 function is_new_line(src: string) {
@@ -75,169 +72,160 @@ function is_new_line(src: string) {
 }
 
 function is_skippable(src: string) {
-    return (src == " " || src == "\n" || src == "\t" || src == "\r")
+    return src == " " || src == "\n" || src == "\t" || src == "\r"
 }
 
 export function tokenize(sourceCode: string): Token[] {
-    const tokens = new Array<Token>()
-
+    const tokens: Token[] = []
     const src = sourceCode.split("")
-
-    while (src.length > 0) {
-        if (src[0] == "("){
-            tokens.push(token(src.shift(), TokenType.OpenParen))
-        } else if (src[0] == ")"){
-            tokens.push(token(src.shift(), TokenType.CloseParen))
-        } else if (src[0] == "["){
-            tokens.push(token(src.shift(), TokenType.OpenBracket))
-        } else if (src[0] == "]"){
-            tokens.push(token(src.shift(), TokenType.CloseBracket))
-        } else if (src[0] == "{"){
-            tokens.push(token(src.shift(), TokenType.OpenBrace))
-        } else if (src[0] == "}"){
-            tokens.push(token(src.shift(), TokenType.CloseBrace))
-        } else if (src[0] == ";"){
-            tokens.push(token(src.shift(), TokenType.Semicolon))
-        } else if (src[0] == ":"){
-            tokens.push(token(src.shift(), TokenType.Colon))
-        } else if (src[0] == ","){
-            tokens.push(token(src.shift(), TokenType.Comma))
-        } else if (src[0] == "."){
-            if (src.length > 1 && is_int(src[1])){
-                let num = ""
-                num += src.shift()
-                if(is_int(src[0])) {
-                    while (src.length > 0 && is_int(src[0]) || src[0] == ".") {
-                        if (src[0] == "."){
-                            throw `Ge kunt gen 2 punte in ne nummer steke`
-                        }
-                        num += src.shift()
-                    }
     
-                    tokens.push(token(num, TokenType.Number))
-                }
-            } else (
-                tokens.push(token(src.shift(), TokenType.Dot))
-            )
-        } else if (src[0] == "\'"){
-            src.shift()
-            let str = ""
-            while (src.length > 0 && src[0] != "\'") {
-                str += src.shift()
-            }
-            if (src.length > 0) src.shift()
-            tokens.push(token(str, TokenType.String))
-        } else if (src[0] == "\""){
-            src.shift()
-            let str = ""
-            while (src.length > 0 && src[0] != "\"") {
-                str += src.shift()
-            }
-            if (src.length > 0) src.shift()
-            tokens.push(token(str, TokenType.String))
-        } else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%"){
-            if (src.length > 1 && (src[0] == '+' || src[0] == '-') && src[1] == src[0]) {
-                const value = src.shift() == '+' ? "++" : "--"
-                tokens.push(token(value, TokenType.UnaryOperator))
-                src.shift()
-            } else if (src.length > 2 && (src[0] == '*' || src[0] == '/') && src[1] == src[0] && src [2] == "=") {
-                const value = src.shift() == '*' ? "**=" : "//="
-                tokens.push(token(value, TokenType.AssignmentOperator))
-                src.shift()
-                src.shift()
-            } else if (src.length > 1 && (src[0] == '*' || src[0] == '/') && src[1] == src[0]) {
-                const value = src.shift() == '*' ? "**" : "//"
-                tokens.push(token(value, TokenType.BinaryOperator))
-                src.shift()
-            } else if (src.length > 1 && src[1] == "=") {
-                const value = src.shift() + "="
-                tokens.push(token(value, TokenType.AssignmentOperator))
-                src.shift()
-            } else {
-                tokens.push(token(src.shift(), TokenType.BinaryOperator))
-            }
-        } else if (src[0] == "=") {
-            if (src.length > 1 && src[1] == src[0]){
-                const value = "=="
-                tokens.push(token(value, TokenType.ComparisonOperator))
-                src.shift()
-                src.shift()
-            } else {
-                const value = src.shift()
-                tokens.push(token(value, TokenType.Equals))
-            }
-        } else if (src[0] == "!") {
-            if (src.length > 1 && src[1] == "="){
-                const value = "!="
-                tokens.push(token(value, TokenType.ComparisonOperator))
-                src.shift()
-                src.shift()
-            }
-        } else if (src[0] == "<") {
-            if (src.length > 1 && src[1] == "="){
-                const value = "<="
-                tokens.push(token(value, TokenType.ComparisonOperator))
-                src.shift()
-                src.shift()
-            } else {
-                const value = src.shift()
-                tokens.push(token(value, TokenType.ComparisonOperator))
-            }
-        } else if (src[0] == ">") {
-            if (src.length > 1 && src[1] == "="){
-                const value = ">="
-                tokens.push(token(value, TokenType.ComparisonOperator))
-                src.shift()
-                src.shift()
-            } else {
-                const value = src.shift()
-                tokens.push(token(value, TokenType.ComparisonOperator))
-            }
-        } else {
-            // Handle multi-character tokens
-            
-            if(is_int(src[0])) {
-                let num = ""
-                let decimal = false
-                while (src.length > 0 && is_int(src[0]) || src[0] == ".") {
-                    if (src[0] == "." && decimal == false){
-                        num += src.shift()
-                        decimal = true
-                    } else if (decimal == true) {
-                        if (src[0] == ".") {
+    while (src.length > 0) {
+        const char = src.shift()!
+        
+        switch (char) {
+            case "(":
+                tokens.push(token(char, TokenType.OpenParen))
+                break
+            case ")":
+                tokens.push(token(char, TokenType.CloseParen))
+                break
+            case "[":
+                tokens.push(token(char, TokenType.OpenBracket))
+                break
+            case "]":
+                tokens.push(token(char, TokenType.CloseBracket))
+                break
+            case "{":
+                tokens.push(token(char, TokenType.OpenBrace))
+                break
+            case "}":
+                tokens.push(token(char, TokenType.CloseBrace))
+                break
+            case "":
+                tokens.push(token(char, TokenType.Semicolon))
+                break
+            case ":":
+                tokens.push(token(char, TokenType.Colon))
+                break
+            case ";":
+                tokens.push(token(char, TokenType.Semicolon))
+                break
+            case ",":
+                tokens.push(token(char, TokenType.Comma))
+                break
+            case ".":
+                if (src.length > 0 && is_int(src[0])) {
+                    let num = char
+                    while (src.length > 0 && (is_int(src[0]) || src[0] == ".")) {
+                        if (src[0] == "." && num.includes(".")) {
                             throw `Ge kunt gen 2 punte in ne nummer steke`
                         }
+                        num += src.shift()
                     }
-                    num += src.shift()
-                }
-
-                tokens.push(token(num, TokenType.Number))
-            } else if (is_alpha(src[0])) {
-                let identifier = ""
-                while (src.length > 0 && is_alpha(src[0])) {
-                    identifier += src.shift()
-                }
-
-                // Check Keywords
-                const reserved = KEYWORDS[identifier];
-                if (typeof reserved == "number"){
-                    tokens.push(token(identifier, reserved))
+                    tokens.push(token(num, TokenType.Number))
                 } else {
-                    tokens.push(token(identifier, TokenType.Identifier))
+                    tokens.push(token(char, TokenType.Dot))
                 }
-            } else if (is_skippable(src[0])) {
-                src.shift() // Skip current character
-            } else if (src[0] == "#") {
-                src.shift()
+                break
+            case "\'":
+            case "\"": {
+                const quoteType = char
+                let str = ""
+                while (src.length > 0 && src[0] != quoteType) {
+                    str += src.shift()
+                }
+                if (src.length > 0) src.shift()
+                tokens.push(token(str, TokenType.String))
+                break
+            }
+            case "+":
+            case "-":
+            case "*":
+            case "/":
+            case "%":
+                if (src[0] == char && (char == "+" || char == "-")) {
+                    tokens.push(token(char + char, TokenType.UnaryOperator))
+                    src.shift()
+                } else if (src[0] == char && (char == "*" || char == "/") && src[1] == "=") {
+                    tokens.push(token(char + char + "=", TokenType.AssignmentOperator))
+                    src.shift() 
+                    src.shift()
+                } else if (src[0] == char && (char == "*" || char == "/")) {
+                    tokens.push(token(char + char, TokenType.BinaryOperator))
+                    src.shift()
+                } else if (src[0] == "=") {
+                    tokens.push(token(char + "=", TokenType.AssignmentOperator))
+                    src.shift()
+                } else {
+                    tokens.push(token(char, TokenType.BinaryOperator))
+                }
+                break
+            case "=":
+                if (src[0] == "=") {
+                    tokens.push(token("==", TokenType.ComparisonOperator))
+                    src.shift()
+                } else {
+                    tokens.push(token(char, TokenType.Equals))
+                }
+                break
+            case "!":
+                if (src[0] == "=") {
+                    tokens.push(token("!=", TokenType.ComparisonOperator))
+                    src.shift()
+                }
+                break
+            case "<":
+                if (src[0] == "=") {
+                    tokens.push(token("<=", TokenType.ComparisonOperator))
+                    src.shift()
+                } else {
+                    tokens.push(token(char, TokenType.ComparisonOperator))
+                }
+                break
+            case ">":
+                if (src[0] == "=") {
+                    tokens.push(token(">=", TokenType.ComparisonOperator))
+                    src.shift()
+                } else {
+                    tokens.push(token(char, TokenType.ComparisonOperator))
+                }
+                break
+            case "#":
                 while (src.length > 0 && !is_new_line(src[0])) {
                     src.shift()
                 }
-            } else {
-                console.log("Kem iet gevonde dak ni ken: \'", src[0], "\'")
-                Deno.exit(1)
-            }
+                break
+            default:
+                if (is_skippable(char)) {
+                    // Skip whitespace
+                } else if (is_int(char)) {
+                    let num = char
+                    while (src.length > 0 && (is_int(src[0]) || src[0] == ".")) {
+                        if (src[0] == "." && num.includes(".")) {
+                            throw `Ge kunt gen 2 punte in ne nummer steke`
+                        }
+                        num += src.shift()
+                    }
+                    tokens.push(token(num, TokenType.Number))
+                } else if (is_alpha(char)) {
+                    let identifier = char
+                    while (src.length > 0 && is_alpha(src[0])) {
+                        identifier += src.shift()
+                    }
+                    const reserved = KEYWORDS[identifier]
+                    if (typeof reserved == "number") {
+                        tokens.push(token(identifier, reserved))
+                    } else {
+                        tokens.push(token(identifier, TokenType.Identifier))
+                    }
+                } else {
+                    console.log(`Kem iet gevonde dak ni ken: '${char}'`)
+                    Deno.exit(1)
+                }
+                break
         }
     }
-    tokens.push({type: TokenType.EOF, value: "EndOfFile"})
+    
+    tokens.push({ type: TokenType.EOF, value: "EndOfFile" })
     return tokens
 }
