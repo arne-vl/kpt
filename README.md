@@ -14,6 +14,8 @@ deno run -A main.ts
 deno run -A main.ts file.kpt
 ```
 
+> ℹ️ To make use of the `kpt` command see [install](installers/install.md).
+
 ## Keywords
 
 | KPT Keyword | TypeScript Equivalent |
