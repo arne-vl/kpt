@@ -7,7 +7,6 @@ This guide will help you install the `kpt` command on your system. The `kpt` com
 1. **Checks for Deno Installation:** The script first checks if Deno is installed on your system. If not, it installs Deno.
 2. **Sets Up the `kpt` Command:**
    - **Unix-based Systems:** The script creates a symbolic link to the `kpt.sh` script in `/usr/local/bin`, making the `kpt` command globally available.
-   - **Windows Systems:** The script creates a `kpt.bat` file to run the `kpt.sh` script and adds it to the system `PATH`.
 3. **Ensures the `kpt.sh` Script is Executable:** The script ensures that the `kpt.sh` script has execute permissions.
 
 ## Warning
@@ -29,19 +28,6 @@ cd kpt/installers
 ./install.sh
 ```
 
-### Windows Systems
-
-1. Ensure you have `git` installed.
-2. Clone the repository:
-```sh
-git clone https://github.com/arne-vl/kpt.git
-```
-3. Run the installation script:
-```sh
-cd kpt/installers
-./install.ps1
-```
-
 ## Verifying the Installation
 After running the installation script, you can verify the installation by running:
 ```sh
@@ -60,6 +46,3 @@ To uninstall the `kpt` command, remove the symbolic link created during installa
 ```sh
 sudo rm /usr/local/bin/kpt
 ```
-
-### Windows Systems
-Remove `kpt.bat` from the cloned repository directory and update the `PATH` variable if necessary.
