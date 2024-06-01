@@ -14,7 +14,14 @@ deno run -A main.ts
 deno run -A main.ts file.kpt
 ```
 
-> ℹ️ To make use of the `kpt` command see [install](installers/install.md).
+## Using the kpt command
+See [installation guide](installers/install.md).
+```shell
+kpt
+```
+```shell
+kpt file.kpt
+```
 
 ## Keywords
 
