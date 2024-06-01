@@ -15,7 +15,7 @@ deno run -A main.ts
 deno run -A main.ts file.kpt
 ```
 
-## Using the kpt command
+## Run using the kpt command
 See [installation guide](installers/install.md).
 ### Running the repl
 ```shell
