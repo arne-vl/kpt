@@ -25,7 +25,7 @@ git clone https://github.com/arne-vl/kpt.git
 3. Run the installation script:
 ```sh
 cd kpt/installers
-./install.sh
+chmod +x install.sh && ./install.sh
 ```
 
 ## Verifying the Installation
