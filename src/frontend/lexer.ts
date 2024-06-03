@@ -12,7 +12,7 @@ export enum TokenType {
     EllipsisOperator, // TODO: ..
 
     Equals, // =
-    Semicolon, // 
+    Semicolon, // ;
 
     OpenParen, // (
     CloseParen, // )

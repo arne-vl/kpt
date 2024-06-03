@@ -2,15 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run test",
+            "label": "repl",
             "type": "shell",
-            "command": "deno test -A",
+            "command": "deno run -A main.ts",
             "presentation": {"echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true},
         },
         {
-            "label": "Run repl",
+            "label": "run tests with coverage",
             "type": "shell",
-            "command": "deno run -A main.ts",
+            "command": "deno test --coverage=cov_profile && deno coverage cov_profile",
             "presentation": {"echo": true, "reveal": "always", "focus": false, "panel": "shared", "showReuseMessage": false, "clear": true},
         },
     ]
