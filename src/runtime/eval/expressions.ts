@@ -137,7 +137,7 @@ export function evaluate_logical_expression(expression: LogicalExpression, envir
         } else if (expression.operator == "of") {
             return (left as BooleanValue).value || (right as BooleanValue).value ? create_boolean(true) : create_boolean(false)
         }
-    } else if (expression.operator == "!") {
+    } else if (expression.operator == "ni") {
         return create_boolean(!(right as BooleanValue).value)
     }
 
