@@ -118,7 +118,7 @@ export function tokenize(sourceCode: string): Token[] {
                     let num = char
                     while (src.length > 0 && (is_int(src[0]) || src[0] == ".")) {
                         if (src[0] == "." && num.includes(".")) {
-                            throw `Ge kunt gen 2 punte in ne nummer steke`
+                            throw Error(`Ge kunt gen 2 punte in ne nummer steke`)
                         }
                         num += src.shift()
                     }
@@ -202,7 +202,7 @@ export function tokenize(sourceCode: string): Token[] {
                     let num = char
                     while (src.length > 0 && (is_int(src[0]) || src[0] == ".")) {
                         if (src[0] == "." && num.includes(".")) {
-                            throw `Ge kunt gen 2 punte in ne nummer steke`
+                            throw Error(`Ge kunt gen 2 punte in ne nummer steke`)
                         }
                         num += src.shift()
                     }

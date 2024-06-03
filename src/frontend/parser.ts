@@ -65,7 +65,7 @@ export default class Parser {
 
         if (this.at().type != TokenType.Equals) {
             if (constant) {
-                throw "As da altij is dan moete daar wel iet aan geve he"
+                throw Error(`As da altij is dan moete daar wel iet aan geve he`)
             }
             return { 
                 kind: "VariableDeclaration", 
@@ -97,8 +97,7 @@ export default class Parser {
         const parameters: string[] = []
         for (const arg of args) {
             if (arg.kind != "Identifier") {
-                console.log(arg)
-                throw `dees is ni just`
+                throw Error(`Argumente moete identifiers zen`)
             }
 
             parameters.push((arg as Identifier).symbol)
@@ -326,7 +325,7 @@ export default class Parser {
                     operator: operator
                 } as UnaryExpression
             } else {
-                throw `Da ga ni`
+                throw Error(`Da ga ni`)
             }
         }
 
@@ -342,7 +341,7 @@ export default class Parser {
                     operator: operator
                 } as AssignmentOperatorExpression
             } else {
-                throw `Da ga ni`
+                throw Error(`Da ga ni`)
             }
         }
 
@@ -439,7 +438,7 @@ export default class Parser {
                 computed = false
 
                 if (property.kind != "Identifier") {
-                    throw `Ge kunt hier gen punt doen`
+                    throw Error(`Ge kunt hier gen punt doen`)
                 }
             } else {
                 property = this.parse_expression()
