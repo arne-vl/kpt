@@ -325,7 +325,7 @@ export default class Parser {
                     operator: operator
                 } as UnaryExpression
             } else {
-                throw Error(`Da ga ni`)
+                throw Error(`++ en -- ga alleen op identifiers e`)
             }
         }
 
@@ -341,7 +341,7 @@ export default class Parser {
                     operator: operator
                 } as AssignmentOperatorExpression
             } else {
-                throw Error(`Da ga ni`)
+                throw Error(`Ge kunt alleen iet toewijze aan nen identifier`)
             }
         }
 
