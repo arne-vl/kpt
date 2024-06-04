@@ -1,4 +1,4 @@
-import { assert, assertAlmostEquals, assertEquals } from "https://deno.land/std@0.224.0/assert/mod.ts"
+import { assert, assertAlmostEquals, assertEquals, assertMatch } from "https://deno.land/std@0.224.0/assert/mod.ts"
 import Parser from "../src/frontend/parser.ts"
 import { setup_global_environment } from "../src/runtime/environment/environment.ts"
 import { evaluate } from "../src/runtime/interpreter.ts"
@@ -25,15 +25,15 @@ Deno.test("waduurist test", () => {
     program = parser.produce_ast(input)
     result = evaluate(program, environment)
     const date = new Date(Date.now())
-    const dateObject = result as DateObject
+    const date_object = result as DateObject
 
-    assertEquals((dateObject.properties.get("jaar") as NumberValue).value, date.getFullYear())
-    assertEquals((dateObject.properties.get("mond") as NumberValue).value, date.getMonth() + 1) // months start with 0
-    assertEquals((dateObject.properties.get("dag") as NumberValue).value, date.getDate())
-    assertEquals((dateObject.properties.get("tuur") as NumberValue).value, date.getHours())
-    assertEquals((dateObject.properties.get("minuut") as NumberValue).value, date.getMinutes())
+    assertEquals((date_object.properties.get("jaar") as NumberValue).value, date.getFullYear())
+    assertEquals((date_object.properties.get("mond") as NumberValue).value, date.getMonth() + 1) // months start with 0
+    assertEquals((date_object.properties.get("dag") as NumberValue).value, date.getDate())
+    assertEquals((date_object.properties.get("tuur") as NumberValue).value, date.getHours())
+    assertEquals((date_object.properties.get("minuut") as NumberValue).value, date.getMinutes())
 
-    const resultMilliseconds = (dateObject.properties.get("millisecond") as NumberValue).value
+    const resultMilliseconds = (date_object.properties.get("millisecond") as NumberValue).value
     assertAlmostEquals(resultMilliseconds, date.getMilliseconds(), 500) // 500ms tolerance
 })
 
@@ -56,6 +56,14 @@ Deno.test("zegt test", () => {
     })
 
     assertEquals(result, "")
+
+    input = "zegt(5)"
+    program = parser.produce_ast(input)
+    result = capture_console_output(() => {
+        evaluate(program, environment)
+    })
+
+    assertEquals(result, "5")
 
     input = "zegt(\"Juw wereld!\")"
     program = parser.produce_ast(input)
@@ -92,6 +100,19 @@ Deno.test("zegt test", () => {
 
     assertEquals(result, "{'y': 14, 'z': 'hallo'}")
 
+    const date_input = "altij datum = waduurist()"
+    const date = new Date(Date.now())
+    program = parser.produce_ast(date_input)
+    evaluate(program, environment)
+    input = "zegt(datum)"
+    program = parser.produce_ast(input)
+    result = capture_console_output(() => {
+        evaluate(program, environment)
+    })
+    const regex = new RegExp(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.\\d{3}Z`)
+
+    assertMatch(result, regex)
+
     const array_input = "altij array = [10, 20, \"juw\"]"
     program = parser.produce_ast(array_input)
     evaluate(program, environment)
@@ -102,6 +123,17 @@ Deno.test("zegt test", () => {
     })
 
     assertEquals(result, "[10, 20, 'juw']")
+
+    const function_input = "funkse test(){zegt(\"test\")}"
+    program = parser.produce_ast(function_input)
+    evaluate(program, environment)
+    input = "zegt(test)"
+    program = parser.produce_ast(input)
+    result = capture_console_output(() => {
+        evaluate(program, environment)
+    })
+
+    assertEquals(result, "<test: funkse>")
 })
 
 // Capture console output
