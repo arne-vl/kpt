@@ -3,7 +3,7 @@ import { assertEquals, assertThrows } from "https://deno.land/std@0.224.0/assert
 import Parser from "../src/frontend/parser.ts"
 import { setup_global_environment } from "../src/runtime/environment/environment.ts"
 import { evaluate } from "../src/runtime/interpreter.ts"
-import { BooleanValue, NumberValue } from "../src/runtime/values.ts"
+import { BooleanValue, NumberValue, StringValue } from "../src/runtime/values.ts"
 
 // Operator Tests
 Deno.test("operator tests", () => {
@@ -21,6 +21,14 @@ Deno.test("operator tests", () => {
     program = parser.produce_ast(input)
     result = evaluate(program, environment)
     assertEquals(result, { type: "number", value: 10 } as NumberValue)
+
+    input = "efkes str = \"test\""
+    program = parser.produce_ast(input)
+    result = evaluate(program, environment)
+    input = "str = str + str"
+    program = parser.produce_ast(input)
+    result = evaluate(program, environment)
+    assertEquals(result, { type: "string", value: "testtest" } as StringValue)
 
     // Subtraction
     input = "x - 5"
@@ -75,6 +83,14 @@ Deno.test("assignment operator tests", () => {
     program = parser.produce_ast(input)
     result = evaluate(program, environment)
     assertEquals(result, { type: "number", value: 10 } as NumberValue)
+
+    input = "efkes str = \"test\""
+    program = parser.produce_ast(input)
+    result = evaluate(program, environment)
+    input = "str += \"test\""
+    program = parser.produce_ast(input)
+    result = evaluate(program, environment)
+    assertEquals(result, { type: "string", value: "testtest" } as StringValue)
 
     // Subtraction assignment
     input = "x -= 3"

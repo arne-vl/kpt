@@ -109,7 +109,7 @@ Deno.test("zegt test", () => {
     result = capture_console_output(() => {
         evaluate(program, environment)
     })
-    const regex = new RegExp(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.\\d{3}Z`)
+    const regex = new RegExp(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}T${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.\\d{1,3}Z`)
 
     assertMatch(result, regex)
 
