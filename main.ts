@@ -7,14 +7,14 @@ const VERSION = "0.3"
 const args = Deno.args
 
 if (args.length > 1) {
-    throw `Kmoet gen of 1 argument hebbe`
+    throw Error(`Kmoet gen of 1 argument hebbe`)
 }
 
 if (args.length == 0) {
     repl()
 } else {
     if (args[0] == "-v" || args[0] == "--version") {
-        console.log("KPT version ", VERSION)
+        console.log("KPT version", VERSION)
     } else {
         run(args[0])
     }
@@ -33,7 +33,7 @@ function repl() {
     const parser = new Parser()
     const environment = setup_global_environment()
 
-    console.log("KPT v", VERSION)
+    console.log(`KPT v${VERSION}`)
 
     while (true){
         const input = prompt(">>")

@@ -125,19 +125,19 @@ export function evaluate_assignment_operator_expression(expression: AssignmentOp
 export function evaluate_logical_expression(expression: LogicalExpression, environment: Environment): RuntimeValue {
     const right = evaluate(expression.right, environment)
     if (right.type != "boolean") {
-        throw `logische poorte ga alleen me just en nijust`
+        throw Error(`Logische poorte ga alleen me just en nijust`)
     }
     if (expression.left) {
         const left = evaluate(expression.left, environment)
         if (left.type != "boolean") {
-            throw `logische poorte ga alleen me just en nijust`
+            throw Error(`Logische poorte ga alleen me just en nijust`)
         }
         if (expression.operator == "en") {
             return (left as BooleanValue).value && (right as BooleanValue).value ? create_boolean(true) : create_boolean(false)
         } else if (expression.operator == "of") {
             return (left as BooleanValue).value || (right as BooleanValue).value ? create_boolean(true) : create_boolean(false)
         }
-    } else if (expression.operator == "!") {
+    } else if (expression.operator == "ni") {
         return create_boolean(!(right as BooleanValue).value)
     }
 
@@ -172,7 +172,7 @@ export function evaluate_comparison_expression(expression: ComparisonExpression,
 
     // TODO implement string & object comparisons
 
-    throw `Ik kan alleen nog ma nummers vergelijke`
+    throw Error(`Vergelijke kan alleen me nummers`)
 }
 
 export function evaluate_identifier(identifier: Identifier, envrionment: Environment): RuntimeValue {
@@ -182,7 +182,7 @@ export function evaluate_identifier(identifier: Identifier, envrionment: Environ
 
 export function evaluate_variable_assignment(expression: AssignmentExpression, environment: Environment): RuntimeValue {
     if (expression.assignee.kind != "Identifier" && expression.assignee.kind != "MemberExpression") {
-        throw `Ge kunt die waarde ni wijzige: ${JSON.stringify(expression.assignee)}`
+        throw Error(`Ge kunt die waarde ni wijzige: ${JSON.stringify(expression.assignee)}`)
     }
 
     if (expression.assignee.kind == "Identifier") {
@@ -247,7 +247,7 @@ export function evaluate_call_expression(expression: CallExpression, environment
         const scope = new Environment(functionvalue.declaration_environment)
 
         if (args.length != functionvalue.parameters.length) {
-            throw `Ni genoeg parameters jong`
+            throw Error(`Ni genoeg parameters jong`)
         }
 
         for (let i = 0; i < functionvalue.parameters.length; i++) {
@@ -266,7 +266,7 @@ export function evaluate_call_expression(expression: CallExpression, environment
         return result
     }
 
-    throw `Kan da ni want das geen funkse: ${expression.caller}`
+    throw Error(`Kan da ni want das geen funkse: ${expression.caller}`)
 }
 
 export function evaluate_member_expression(expression: MemberExpression, environment: Environment): RuntimeValue {
@@ -283,7 +283,7 @@ export function evaluate_member_expression(expression: MemberExpression, environ
         } else if (identifier.type === "string") {
             property = { kind: "StringLiteral", value: (identifier as StringValue).value } as StringLiteral
         } else {
-            throw `Ni het juste type: ${identifier.type}`
+            throw Error(`Ni het juste type: ${identifier.type}`)
         }
     } else if (expression.property.kind === "NumericLiteral") {
         property = expression.property as NumericLiteral
@@ -291,7 +291,7 @@ export function evaluate_member_expression(expression: MemberExpression, environ
         const string = expression.property as StringLiteral
         property = { kind: "Identifier", symbol: string.value } as Identifier
     } else {
-        throw `Da wordt ni ondersteund: ${expression.property.kind}`
+        throw Error(`Da wordt ni ondersteund: ${expression.property.kind}`)
     }
 
     if (object.type === "object") {
@@ -307,7 +307,7 @@ export function evaluate_member_expression(expression: MemberExpression, environ
             return obj.properties.get(property.value) as RuntimeValue
         }
 
-        throw `Da besta ni: ${property.kind === "Identifier" ? property.symbol : property.value}`
+        throw Error(`Da besta ni: ${property.kind === "Identifier" ? property.symbol : property.value}`)
     } else if (object.type === "array") {
         const array = object as ArrayValue
         if (property.kind === "NumericLiteral" && property.value < array.values.length) {
@@ -324,7 +324,7 @@ export function evaluate_member_expression(expression: MemberExpression, environ
             }
         }
 
-        throw `Diejen index kan ni: ${property.kind === "Identifier" ? property.symbol : property.value}`
+        throw Error(`Diejen index kan ni: ${property.kind === "Identifier" ? property.symbol : property.value}`)
     } else if (object.type === "dateobject") {
         const dateObject = object as DateObject
         if (property.kind === "Identifier" && dateObject.properties.has(property.symbol)) {
@@ -333,9 +333,9 @@ export function evaluate_member_expression(expression: MemberExpression, environ
             return dateObject.properties.get(property.value) as RuntimeValue
         }
 
-        throw `Gen geldige datum eigenschap: ${property.kind === "Identifier" ? property.symbol : property.value}`
+        throw Error(`Gen geldige datum eigenschap: ${property.kind === "Identifier" ? property.symbol : property.value}`)
     } else {
-        throw `Ge kunt zo alleen dinge van arrays en objecte ophale, ni van ${object.type}`
+        throw Error(`Ge kunt zo alleen dinge van arrays en objecte ophale, ni van ${object.type}`)
     }
 }
 

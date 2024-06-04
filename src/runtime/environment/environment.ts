@@ -23,7 +23,7 @@ export default class Environment {
 
     public declare_variable(name: string, value: RuntimeValue, constant: boolean): RuntimeValue {
         if(this.variables.has(name)){
-            throw `Ik kan dees ni make want '${name}' besta al`
+            throw Error(`Ik kan dees ni make want '${name}' besta al`)
         }
 
         if (constant) {
@@ -38,7 +38,7 @@ export default class Environment {
         const environment = this.resolve(name)
 
         if (environment.constants.has(name)) {
-            throw "Iet da altij is kunde ni verandere"
+            throw Error("Iet da altij is kunde ni verandere")
         }
 
         environment.variables.set(name, value)
@@ -55,7 +55,7 @@ export default class Environment {
         if (this.variables.has(name))
             return this
         if (this.parent == undefined)
-            throw `Da kennek ni, denk da '${name}' ni besta`
+            throw Error(`Da kennek ni, denk da '${name}' ni besta`)
 
         return this.parent.resolve(name)
     }
