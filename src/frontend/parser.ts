@@ -442,7 +442,7 @@ export default class Parser {
                 }
 
                 const identifier = property as Identifier
-                if ((identifier.symbol == "derbij" || identifier.symbol == "deraf") && object.kind == "Identifier") {
+                if ((identifier.symbol == "derbij" || identifier.symbol == "deraf" || identifier.symbol == "draaidoem") && object.kind == "Identifier") {
                     if (identifier.symbol == "derbij") {
                         this.eat()
                         if (this.at().type == TokenType.CloseParen) {
@@ -456,15 +456,15 @@ export default class Parser {
                             argument: argument
                         } as ArrayOperationExpression
                         this.eat()
-                    } else if (identifier.symbol == "deraf") {
+                    } else if (identifier.symbol == "deraf" || identifier.symbol == "draaidoem") {
                         if (this.at().type == TokenType.OpenParen) {
                             this.eat()
                             if (this.at().type != TokenType.CloseParen) {
-                                throw Error(`'deraf' kan gen argumente hebbe`)
+                                throw Error(`'${identifier.symbol}' kan gen argumente hebbe`)
                             }
                             this.eat()
                         } else if (this.at().type != TokenType.Dot && this.at().type != TokenType.OpenBracket && this.at().type != TokenType.Semicolon && this.at().type != TokenType.EOF) {
-                            throw Error(`'deraf' kan gen argumente hebbe`)
+                            throw Error(`'${identifier.symbol}' kan gen argumente hebbe`)
                         }
                         object = {
                             kind: "ArrayOperationExpression",

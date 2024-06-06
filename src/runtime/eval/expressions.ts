@@ -383,6 +383,8 @@ export function evaluate_array_add_expression(expression: ArrayOperationExpressi
         
     } else if (expression.operation == "deraf") {
         values.pop()
+    } else if (expression.operation == "draaidoem") {
+        values.reverse()
     } else {
         return create_null()
     }
