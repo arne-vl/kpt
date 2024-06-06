@@ -14,6 +14,7 @@ export type NodeType =
     | "LogicalExpression"
     | "ComparisonExpression"
     | "MemberExpression"
+    | "ArrayOperationExpression"
     | "CallExpression"
 
     // Literals
@@ -105,6 +106,13 @@ export interface MemberExpression extends Expression {
     object: Expression
     property: Expression
     computed: boolean
+}
+
+export interface ArrayOperationExpression extends Expression {
+    kind: "ArrayOperationExpression"
+    array: Expression
+    operation: string
+    argument?: Expression
 }
 
 export interface CallExpression extends Expression {

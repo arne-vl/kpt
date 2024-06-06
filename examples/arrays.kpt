@@ -1,3 +1,9 @@
 altij test = [1, 3, "hallo", zegt, [5,6]]
 zegt(test)
 zegt(test[2])
+
+altij rij = [1, 2, 3]
+rij.derbij(4)
+zegt(rij)
+rij.deraf()
+zegt(rij)

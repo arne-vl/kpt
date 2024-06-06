@@ -1,5 +1,5 @@
-import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression, LogicalExpression } from "./ast.ts";
-import { ArrayExpression } from "./ast.ts";
+import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression, LogicalExpression, ArrayOperationExpression } from "./ast.ts"
+import { ArrayExpression } from "./ast.ts"
 import { 
     Statement, 
     Program, 
@@ -12,8 +12,8 @@ import {
     AssignmentExpression,
     Property,
     ObjectLiteral,
-} from "./ast.ts";
-import { tokenize, Token, TokenType } from "./lexer.ts";
+} from "./ast.ts"
+import { tokenize, Token, TokenType } from "./lexer.ts"
 
 export default class Parser {
     private tokens: Token[] = []
@@ -439,6 +439,40 @@ export default class Parser {
 
                 if (property.kind != "Identifier") {
                     throw Error(`Ge kunt hier gen punt doen`)
+                }
+
+                const identifier = property as Identifier
+                if ((identifier.symbol == "derbij" || identifier.symbol == "deraf") && object.kind == "Identifier") {
+                    if (identifier.symbol == "derbij") {
+                        this.eat()
+                        if (this.at().type == TokenType.CloseParen) {
+                            throw Error(`Ge moet er wel iet bij doen dan he`)
+                        }
+                        const argument = this.parse_expression()
+                        object = {
+                            kind: "ArrayOperationExpression",
+                            array: object,
+                            operation: identifier.symbol,
+                            argument: argument
+                        } as ArrayOperationExpression
+                        this.eat()
+                    } else if (identifier.symbol == "deraf") {
+                        if (this.at().type == TokenType.OpenParen) {
+                            this.eat()
+                            if (this.at().type != TokenType.CloseParen) {
+                                throw Error(`'deraf' kan gen argumente hebbe`)
+                            }
+                            this.eat()
+                        } else if (this.at().type != TokenType.Dot && this.at().type != TokenType.OpenBracket && this.at().type != TokenType.Semicolon && this.at().type != TokenType.EOF) {
+                            throw Error(`'deraf' kan gen argumente hebbe`)
+                        }
+                        object = {
+                            kind: "ArrayOperationExpression",
+                            array: object,
+                            operation: identifier.symbol
+                        } as ArrayOperationExpression
+                    }
+                    continue
                 }
             } else {
                 property = this.parse_expression()
