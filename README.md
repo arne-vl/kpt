@@ -31,17 +31,19 @@ kpt file.kpt
 
 | KPT Keyword | TypeScript Equivalent |
 | ----------- | ---------------------- |
-| efkes       | let                    |
-| altij       | const                  |
-| just        | true                   |
-| nijust      | false                  |
-| nikske      | null                   |
-| pi          | Math.PI                |
-| zegt()      | console.log()          |
-| waduurist() | new Date(Date.now())   |
-| funkse      | function               |
-| as          | if                     |
-| aans        | else                   |
+| efkes              | let                    |
+| altij              | const                  |
+| just               | true                   |
+| nijust             | false                  |
+| nikske             | null                   |
+| pi                 | Math.PI                |
+| zegt()             | console.log()          |
+| waduurist()        | new Date(Date.now())   |
+| funkse             | function               |
+| as                 | if                     |
+| aans               | else                   |
+| {array}.derbij()   | {array}.push()         |
+| {array}.deraf()    | {array}.pop()          |
 
 ## Supported Operators
 - `+` : Addition
