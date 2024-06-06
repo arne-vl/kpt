@@ -364,9 +364,17 @@ export function evaluate_array_add_expression(expression: ArrayOperationExpressi
             case "StringLiteral":
                 values.push({ type: "string", value: (expression.argument as StringLiteral).value } as StringValue)
                 break
+            case "ArrayExpression":
+            case "BinaryExpression":
+            case "ComparisonExpression":
+            case "MemberExpression":
+            case "CallExpression":
+            case "ObjectLiteral":
+            case "UnaryExpression":
+            case "ArrayOperationExpression":
             case "Identifier": {
-                const identifier = evaluate(expression.argument as Identifier, environment)
-                values.push(identifier)
+                const value = evaluate(expression.argument as Identifier, environment)
+                values.push(value)
                 break
             }
             default:

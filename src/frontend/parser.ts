@@ -216,7 +216,7 @@ export default class Parser {
     private parse_array_items(): Expression[] {
         this.expect(TokenType.OpenBracket, "Kmoet ier een [] hebbe")
 
-        const args = this.at().type == TokenType.CloseParen ? [] : this.parse_args_list()
+        const args = this.at().type == TokenType.CloseBracket ? [] : this.parse_args_list()
 
         this.expect(TokenType.CloseBracket, "Kmoet ier een ] hebbe")
 

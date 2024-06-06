@@ -17,6 +17,13 @@ Deno.test("array tests", () => {
 
     assertEquals(result, expected as ArrayValue)
 
+    input = "altij lege_rij = []"
+    program = parser.produce_ast(input)
+    result = evaluate(program, environment)
+    expected = { type: "array", values: [] }
+
+    assertEquals(result, expected as ArrayValue)
+
     input = "rij.derbij(4)"
     program = parser.produce_ast(input)
     result = evaluate(program, environment)
