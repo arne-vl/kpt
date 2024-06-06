@@ -364,6 +364,11 @@ export function evaluate_array_add_expression(expression: ArrayOperationExpressi
             case "StringLiteral":
                 values.push({ type: "string", value: (expression.argument as StringLiteral).value } as StringValue)
                 break
+            case "Identifier": {
+                const identifier = evaluate(expression.argument as Identifier, environment)
+                values.push(identifier)
+                break
+            }
             default:
                 throw Error(`Da kunde er nog ni bij doen: ${expression.argument.kind}`)
         }
