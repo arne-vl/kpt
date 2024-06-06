@@ -361,6 +361,9 @@ export function evaluate_array_add_expression(expression: ArrayOperationExpressi
             case "NumericLiteral":
                 values.push({ type: "number", value: (expression.argument as NumericLiteral).value } as NumberValue)
                 break
+            case "StringLiteral":
+                values.push({ type: "string", value: (expression.argument as StringLiteral).value } as StringValue)
+                break
             default:
                 throw Error(`Da kunde er nog ni bij doen: ${expression.argument.kind}`)
         }
