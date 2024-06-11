@@ -382,8 +382,11 @@ export function evaluate_array_add_expression(expression: ArrayOperationExpressi
         }
         
     } else if (expression.operation == "deraf") {
+        if (values.length == 0) {
+            throw Error(`Ge kunt er niks uit doen as er niks in zit: '${expression.array.kind == "Identifier" ? (expression.array as Identifier).symbol : expression.array.kind}'`)
+        }
         values.pop()
-    } else if (expression.operation == "draaidoem") {
+    } else if (expression.operation == "draaitoem") {
         values.reverse()
     } else {
         return create_null()
