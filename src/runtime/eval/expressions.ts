@@ -388,6 +388,12 @@ export function evaluate_array_add_expression(expression: ArrayOperationExpressi
         values.pop()
     } else if (expression.operation == "draaitoem") {
         values.reverse()
+    } else if (expression.operation == "teerste") {
+        if (values.length == 0) {
+            throw Error(`Ge kunt et eerste ni pakke as er niks in zit: '${expression.array.kind == "Identifier" ? (expression.array as Identifier).symbol : expression.array.kind}'`)
+        }
+        const value = values.shift()
+        return value != undefined ? value : create_null()
     } else {
         return create_null()
     }

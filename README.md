@@ -45,6 +45,7 @@ kpt file.kpt
 | {array}.derbij()     | {array}.push()         |
 | {array}.deraf()      | {array}.pop()          |
 | {array}.draaitoem()  | {array}.reverse()      |
+| {array}.teerste()    | {array}.shift()        |
 
 ## Supported Operators
 - `+` : Addition

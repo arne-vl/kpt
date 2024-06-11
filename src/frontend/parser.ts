@@ -442,7 +442,7 @@ export default class Parser {
                 }
 
                 const identifier = property as Identifier
-                if ((identifier.symbol == "derbij" || identifier.symbol == "deraf" || identifier.symbol == "draaitoem") && object.kind == "Identifier") {
+                if ((identifier.symbol == "derbij" || identifier.symbol == "deraf" || identifier.symbol == "draaitoem" || identifier.symbol == "teerste") && object.kind == "Identifier") {
                     if (identifier.symbol == "derbij") {
                         this.eat()
                         if (this.at().type == TokenType.CloseParen) {
@@ -456,7 +456,7 @@ export default class Parser {
                             argument: argument
                         } as ArrayOperationExpression
                         this.eat()
-                    } else if (identifier.symbol == "deraf" || identifier.symbol == "draaitoem") {
+                    } else if (identifier.symbol == "deraf" || identifier.symbol == "draaitoem" || identifier.symbol == "teerste") {
                         if (this.at().type == TokenType.OpenParen) {
                             this.eat()
                             if (this.at().type != TokenType.CloseParen) {

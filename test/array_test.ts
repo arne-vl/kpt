@@ -34,6 +34,16 @@ Deno.test("array tests", () => {
         "Ge kunt er niks uit doen as er niks in zit: 'lege_rij'"
     )
 
+    assertThrows(
+        () => {
+            input = "lege_rij.teerste()"
+            program = parser.produce_ast(input)
+            evaluate(program, environment)
+        },
+        Error,
+        "Ge kunt et eerste ni pakke as er niks in zit: 'lege_rij'"
+    )
+
     input = "rij.derbij(4)"
     program = parser.produce_ast(input)
     result = evaluate(program, environment)
@@ -81,6 +91,12 @@ Deno.test("array tests", () => {
     expected = { type: "array", values: [ { type: "number", value: 3 } as NumberValue, { type: "number", value: 2 } as NumberValue, { type: "number", value: 1 } as NumberValue ] }
 
     assertEquals(result, expected as ArrayValue)
+
+    input = "rij.teerste()"
+    program = parser.produce_ast(input)
+    result = evaluate(program, environment)
+
+    assertEquals(result, { type: "number", value: 3 } as NumberValue)
 
     input = "rij = [\"hallo\"]"
     program = parser.produce_ast(input)
