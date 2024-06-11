@@ -3,7 +3,7 @@ import Parser from "../src/frontend/parser.ts";
 import { setup_global_environment } from "../src/runtime/environment/environment.ts";
 import { evaluate } from "../src/runtime/interpreter.ts";
 import { assertEquals } from "https://deno.land/std@0.224.0/assert/assert_equals.ts";
-import { ArrayValue, NumberValue, StringValue } from "../src/runtime/values.ts";
+import { ArrayValue, NullValue, NumberValue, StringValue } from "../src/runtime/values.ts";
 
 
 Deno.test("array tests", () => {
@@ -34,15 +34,11 @@ Deno.test("array tests", () => {
         "Ge kunt er niks uit doen as er niks in zit: 'lege_rij'"
     )
 
-    assertThrows(
-        () => {
-            input = "lege_rij.teerste()"
-            program = parser.produce_ast(input)
-            evaluate(program, environment)
-        },
-        Error,
-        "Ge kunt et eerste ni pakke as er niks in zit: 'lege_rij'"
-    )
+    input = "lege_rij.teerste()"
+    program = parser.produce_ast(input)
+    result = evaluate(program, environment)
+
+    assertEquals(result, { type: "null", value: null } as NullValue)
 
     input = "rij.derbij(4)"
     program = parser.produce_ast(input)
