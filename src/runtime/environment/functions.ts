@@ -69,7 +69,7 @@ function pretty_print(value: RuntimeValue, quotes: boolean = false): string {
             const seconds = (date.properties.get("second") as NumberValue).value
 
             const milliseconds = (date.properties.get("millisecond") as NumberValue).value
-            return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z`
+            return `'${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}Z'`
         }
         case "number":
             return (value as NumberValue).value.toString()

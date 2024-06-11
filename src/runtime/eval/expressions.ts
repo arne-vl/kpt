@@ -1,4 +1,4 @@
-import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression, NumericLiteral, StringLiteral, ArrayExpression } from "../../frontend/ast.ts"
+import { AssignmentExpression, AssignmentOperatorExpression, BinaryExpression, CallExpression, ComparisonExpression, Identifier, MemberExpression, ObjectLiteral, UnaryExpression, LogicalExpression, NumericLiteral, StringLiteral, ArrayExpression, ArrayOperationExpression } from "../../frontend/ast.ts"
 import Environment from "../environment/environment.ts"
 import { evaluate } from "../interpreter.ts"
 import { ArrayValue, BooleanValue, DateObject, FunctionValue, InternalFunctionValue, NumberValue, ObjectValue, RuntimeValue, StringValue, create_boolean, create_null, create_number, create_string } from "../values.ts"
@@ -310,14 +310,14 @@ export function evaluate_member_expression(expression: MemberExpression, environ
         throw Error(`Da besta ni: ${property.kind === "Identifier" ? property.symbol : property.value}`)
     } else if (object.type === "array") {
         const array = object as ArrayValue
-        if (property.kind === "NumericLiteral" && property.value < array.values.length) {
+        if (property.kind === "NumericLiteral" && property.value < array.values.length && expression.computed == true) {
             return array.values[property.value] as RuntimeValue
-        } else if (property.kind === "Identifier") {
+        } else if (property.kind === "Identifier" && expression.computed == true) {
             const index = evaluate_identifier(property as Identifier, environment)
             if (index.type === "number" && (index as NumberValue).value < array.values.length) {
                 return array.values[(index as NumberValue).value] as RuntimeValue
             }
-        } else if (property.kind === "StringLiteral") {
+        } else if (property.kind === "StringLiteral" && expression.computed == true) {
             const index = evaluate_identifier({ kind: "Identifier", symbol: property.value } as Identifier, environment)
             if (index.type === "number" && (index as NumberValue).value < array.values.length) {
                 return array.values[(index as NumberValue).value] as RuntimeValue
@@ -345,5 +345,55 @@ export function evaluate_array_expression(expression: ArrayExpression, environme
     expression.values.forEach((value) => {
         values.push(evaluate(value, environment))
     })
+    return { type: "array", values: values } as ArrayValue
+}
+
+export function evaluate_array_add_expression(expression: ArrayOperationExpression, environment: Environment): RuntimeValue {
+    const array = evaluate(expression.array, environment)
+    const values = (array as ArrayValue).values
+    
+    if (expression.operation == "derbij") {
+        if (!expression.argument) {
+            throw Error(`Ge moet er wel iet bij doen dan he`)
+        }
+
+        switch (expression.argument.kind) {
+            case "NumericLiteral":
+                values.push({ type: "number", value: (expression.argument as NumericLiteral).value } as NumberValue)
+                break
+            case "StringLiteral":
+                values.push({ type: "string", value: (expression.argument as StringLiteral).value } as StringValue)
+                break
+            case "ArrayExpression":
+            case "BinaryExpression":
+            case "ComparisonExpression":
+            case "MemberExpression":
+            case "CallExpression":
+            case "ObjectLiteral":
+            case "UnaryExpression":
+            case "ArrayOperationExpression":
+            case "Identifier": {
+                const value = evaluate(expression.argument as Identifier, environment)
+                values.push(value)
+                break
+            }
+            default:
+                throw Error(`Da kunde er nog ni bij doen: ${expression.argument.kind}`)
+        }
+        
+    } else if (expression.operation == "deraf") {
+        if (values.length == 0) {
+            throw Error(`Ge kunt er niks uit doen as er niks in zit: '${expression.array.kind == "Identifier" ? (expression.array as Identifier).symbol : expression.array.kind}'`)
+        }
+        values.pop()
+    } else if (expression.operation == "draaitoem") {
+        values.reverse()
+    } else if (expression.operation == "teerste") {
+        const value = values.shift()
+        return value != undefined ? value : create_null()
+    } else {
+        return create_null()
+    }
+
     return { type: "array", values: values } as ArrayValue
 }

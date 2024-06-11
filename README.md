@@ -29,19 +29,23 @@ kpt file.kpt
 
 ## Keywords
 
-| KPT Keyword | TypeScript Equivalent |
-| ----------- | ---------------------- |
-| efkes       | let                    |
-| altij       | const                  |
-| just        | true                   |
-| nijust      | false                  |
-| nikske      | null                   |
-| pi          | Math.PI                |
-| zegt()      | console.log()          |
-| waduurist() | new Date(Date.now())   |
-| funkse      | function               |
-| as          | if                     |
-| aans        | else                   |
+| KPT Keyword          | TypeScript Equivalent  |
+| -------------------- | ---------------------- |
+| efkes                | let                    |
+| altij                | const                  |
+| just                 | true                   |
+| nijust               | false                  |
+| nikske               | null                   |
+| pi                   | Math.PI                |
+| zegt()               | console.log()          |
+| waduurist()          | new Date(Date.now())   |
+| funkse               | function               |
+| as                   | if                     |
+| aans                 | else                   |
+| {array}.derbij()     | {array}.push()         |
+| {array}.deraf()      | {array}.pop()          |
+| {array}.draaitoem()  | {array}.reverse()      |
+| {array}.teerste()    | {array}.shift()        |
 
 ## Supported Operators
 - `+` : Addition

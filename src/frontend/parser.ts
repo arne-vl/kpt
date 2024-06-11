@@ -1,5 +1,5 @@
-import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression, LogicalExpression } from "./ast.ts";
-import { ArrayExpression } from "./ast.ts";
+import { AssignmentOperatorExpression, CallExpression, ComparisonExpression, IfStatement, MemberExpression, StringLiteral, UnaryExpression, LogicalExpression, ArrayOperationExpression } from "./ast.ts"
+import { ArrayExpression } from "./ast.ts"
 import { 
     Statement, 
     Program, 
@@ -12,8 +12,8 @@ import {
     AssignmentExpression,
     Property,
     ObjectLiteral,
-} from "./ast.ts";
-import { tokenize, Token, TokenType } from "./lexer.ts";
+} from "./ast.ts"
+import { tokenize, Token, TokenType } from "./lexer.ts"
 
 export default class Parser {
     private tokens: Token[] = []
@@ -216,7 +216,7 @@ export default class Parser {
     private parse_array_items(): Expression[] {
         this.expect(TokenType.OpenBracket, "Kmoet ier een [] hebbe")
 
-        const args = this.at().type == TokenType.CloseParen ? [] : this.parse_args_list()
+        const args = this.at().type == TokenType.CloseBracket ? [] : this.parse_args_list()
 
         this.expect(TokenType.CloseBracket, "Kmoet ier een ] hebbe")
 
@@ -439,6 +439,40 @@ export default class Parser {
 
                 if (property.kind != "Identifier") {
                     throw Error(`Ge kunt hier gen punt doen`)
+                }
+
+                const identifier = property as Identifier
+                if ((identifier.symbol == "derbij" || identifier.symbol == "deraf" || identifier.symbol == "draaitoem" || identifier.symbol == "teerste") && object.kind == "Identifier") {
+                    if (identifier.symbol == "derbij") {
+                        this.eat()
+                        if (this.at().type == TokenType.CloseParen) {
+                            throw Error(`Ge moet er wel iet bij doen dan he`)
+                        }
+                        const argument = this.parse_expression()
+                        object = {
+                            kind: "ArrayOperationExpression",
+                            array: object,
+                            operation: identifier.symbol,
+                            argument: argument
+                        } as ArrayOperationExpression
+                        this.eat()
+                    } else if (identifier.symbol == "deraf" || identifier.symbol == "draaitoem" || identifier.symbol == "teerste") {
+                        if (this.at().type == TokenType.OpenParen) {
+                            this.eat()
+                            if (this.at().type != TokenType.CloseParen) {
+                                throw Error(`'${identifier.symbol}' kan gen argumente hebbe`)
+                            }
+                            this.eat()
+                        } else if (this.at().type != TokenType.Dot && this.at().type != TokenType.OpenBracket && this.at().type != TokenType.Semicolon && this.at().type != TokenType.EOF) {
+                            throw Error(`'${identifier.symbol}' kan gen argumente hebbe`)
+                        }
+                        object = {
+                            kind: "ArrayOperationExpression",
+                            array: object,
+                            operation: identifier.symbol
+                        } as ArrayOperationExpression
+                    }
+                    continue
                 }
             } else {
                 property = this.parse_expression()

@@ -63,6 +63,10 @@ function is_alpha(src: string) {
     return /^[a-zA-Z]$/.test(src)
 }
 
+function is_underscore(src: string) {
+    return src == "_"
+}
+
 function is_int(src: string) {
     return /^[0-9]$/.test(src)
 }
@@ -209,7 +213,7 @@ export function tokenize(sourceCode: string): Token[] {
                     tokens.push(token(num, TokenType.Number))
                 } else if (is_alpha(char)) {
                     let identifier = char
-                    while (src.length > 0 && is_alpha(src[0])) {
+                    while (src.length > 0 && (is_alpha(src[0]) || is_underscore(src[0]) || is_int(src[0]))) {
                         identifier += src.shift()
                     }
                     const reserved = KEYWORDS[identifier]
